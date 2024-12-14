@@ -1,39 +1,6 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import { Card } from "components";
 import DEMO_PRODUCTS from "demo";
-
-// interface PaginationProps {
-//   currentPage: number;
-//   totalPages: number;
-//   setCurrentPage: (page: number) => void;
-// }
-
-// const paginationBtns: FC<PaginationProps> = ({
-//   currentPage,
-//   setCurrentPage,
-//   totalPages,
-// }) => {
-//   const [{ buttons }, setState] = useState({
-//     buttons: [],
-//   });
-
-//   for (let i = 0; i < totalPages; i++) {
-//     const page = i;
-
-//     if (page === currentPage) {
-//       return (
-//         <button
-//           key={page}
-//           className="px-4 py-2 border-2 border-blue-500 text-blue-500 rounded-md active"
-//         >
-//           {page + 1}
-//         </button>
-//       );
-//     }
-//   }
-
-//   return <button></button>;
-// };
 
 const Products = () => {
   const [{ startIdx, endIdx, currentPage }, setState] = useState({
