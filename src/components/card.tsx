@@ -1,4 +1,5 @@
-import { FC } from "react";
+import { FC, useState } from "react";
+import { Minus, Plus } from "lucide-react";
 
 interface Product {
   id: number;
@@ -25,6 +26,21 @@ const seasonBg = (season: string) => {
 };
 
 const Card: FC<Product> = (Product) => {
+  const [quantity, setQuantity] = useState(0);
+
+  const incrementQuantity = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const decrementQuantity = () => {
+    setQuantity((prev) => Math.max(0, prev - 1));
+  };
+
+  const addToCart = () => {
+    setQuantity(1);
+    // Here you would typically also update a global cart state or send a request to your backend
+  };
+
   return (
     <div className="w-[250px] border border-gray-200 rounded-2xl shadow-sm">
       <div className="relative rounded-tl-2xl">
@@ -46,9 +62,32 @@ const Card: FC<Product> = (Product) => {
           {Product.id} - {Product.title}
         </h3>
         <p className="font-bold text-xl mb-3">${Product.price}</p>
-        <button className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg transition-colors duration-200 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-          Add to Cart
-        </button>
+        {quantity === 0 ? (
+          <button
+            onClick={addToCart}
+            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg transition-colors duration-200 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Add to Cart
+          </button>
+        ) : (
+          <div className="flex items-center justify-between mt-2">
+            <button
+              onClick={decrementQuantity}
+              className="p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              aria-label="Decrease quantity"
+            >
+              <Minus className="h-5 w-5" />
+            </button>
+            <span className="font-semibold text-lg">{quantity}</span>
+            <button
+              onClick={incrementQuantity}
+              className="p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              aria-label="Increase quantity"
+            >
+              <Plus className="h-5 w-5" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

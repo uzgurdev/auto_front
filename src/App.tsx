@@ -4,9 +4,10 @@ import { Outlet } from "react-router";
 
 const App = (): JSX.Element => {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <Navbar />
+    <div className="flex flex-col items-center justify-center">
+      <Navbar />
+      <div className="h-[60px]"></div>
+      <div className="text-center min-h-[90vh]">
         <Outlet />
       </div>
     </div>

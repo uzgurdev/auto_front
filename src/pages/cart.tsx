@@ -15,14 +15,14 @@ const initialCartItems: CartItem[] = [
     name: "Summer T-Shirt",
     price: 19.99,
     quantity: 2,
-    image: "https://via.placeholder.com/250x220",
+    image: "https://via.placeholder.com/80x80",
   },
   {
     id: 2,
     name: "Winter Jacket",
     price: 89.99,
     quantity: 1,
-    image: "/placeholder.svg?height=80&width=80",
+    image: "https://via.placeholder.com/80x80",
   },
 ];
 
@@ -53,7 +53,7 @@ export default function CartPage() {
   const total = subtotal + tax;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 max-w-max">
       <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
       {cartItems.length === 0 ? (
         <div className="text-center py-16">
@@ -66,8 +66,8 @@ export default function CartPage() {
           </p>
         </div>
       ) : (
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-2/3">
+        <div className="grid grid-cols-[800px_400px] gap-8">
+          <div className="">
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
               <table className="w-full">
                 <thead className="bg-gray-50">
@@ -151,7 +151,7 @@ export default function CartPage() {
               </table>
             </div>
           </div>
-          <div className="lg:w-1/3">
+          <div className="">
             <div className="bg-white shadow-md rounded-lg p-6">
               <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
               <div className="flex justify-between mb-2">
