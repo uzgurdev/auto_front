@@ -1,0 +1,17 @@
+.icon-phone {
+  mask-image: url("../icons/phone.svg");
+  -webkit-mask-image: url("../icons/phone.svg");
+  mask-repeat: no-repeat;
+}
+
+.icon-search {
+  mask-image: url("../icons/search.svg");
+  -webkit-mask-image: url("../icons/search.svg");
+  mask-repeat: no-repeat;
+}
+
+.icon-basket {
+  mask-image: url("../icons/basket.svg");
+  -webkit-mask-image: url("../icons/basket.svg");
+  mask-repeat: no-repeat;
+}

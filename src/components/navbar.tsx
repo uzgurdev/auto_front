@@ -1,59 +1,115 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
-import { Menu, X, ShoppingCart } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router";
+import { Menu, X, ShoppingCart, Phone, ChevronDown } from "lucide-react";
 
-import Logo from "../assets/logo.png";
+import Logo from "../assets/images/logo.png";
+import { Icon } from "./icon";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState("uz");
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50  bg-white shadow-md w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="flex items-center">
-              <img
-                src={Logo}
-                alt="Logo"
-                width={40}
-                height={40}
-                className="h-8 w-auto"
+    <nav className="fixed top-0 left-0 right-0 z-[9999] bg-red shadow-xl h-[120px] w-full">
+      <div className="wrapper flex items-center pl-[108px]">
+        <Link to="/" className="flex items-center w-[120px] h-[92px]">
+          <img
+            src={Logo}
+            alt="Logo"
+            width={120}
+            height={92}
+            className="h-120 w-auto"
+          />
+        </Link>
+        <div className="right-wrapper flex-col items-center w-full relative">
+          <div className="absolute inset-0 h-10 bg-primary clip-path-diagonal -z-10"></div>
+          <div className="highlighted-top bg-transparent h-10 w-full shadow-none shadow-transparent flex items-center justify-end pr-[108px] font-Poppins font-[400] overflow-visible">
+            <div className="wrapper flex items-center gap-10 w-[265px] text-sm">
+              <div className="phone h-7 w-auto flex gap-[10px] items-center">
+                <Icon
+                  icon="icon-phone"
+                  className="h-7 w-7"
+                  iconSize="sm"
+                  color="var(--color-text-primary-light)"
+                />
+                <span className="text-white">+998 99 999 99 99</span>
+              </div>
+              <div className="lang relative overflow-visible">
+                <button
+                  onClick={() => setIsLangOpen(!isLangOpen)}
+                  className="flex items-center gap-1 cursor-pointer"
+                >
+                  <span className="text-white">
+                    {currentLang.toUpperCase()}
+                  </span>
+                  <ChevronDown
+                    className={`text-white transition-transform ${
+                      isLangOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {isLangOpen && (
+                  <div className="lang_drop-down absolute top-full mt-2 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
+                    {["uz", "ru", "en"].map((lang) => (
+                      <Link
+                        key={lang}
+                        to={`/${lang}${location.pathname.replace(
+                          /^\/[a-z]{2}/,
+                          ""
+                        )}`}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => {
+                          setIsLangOpen(false);
+                          setCurrentLang(lang);
+                        }}
+                      >
+                        {lang.toUpperCase()}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="bottom-wrapper h-20 pr-[108px] flex gap-5 items-center justify-end">
+            <div className="searchbar w-[650px] h-[50px] rounded-[50px] bg-bg-secondary outline-none relative active:text-primary">
+              <input
+                type="text"
+                placeholder="Qidiruv..."
+                className="w-full h-full bg-transparent px-[30px] outline-none font-Poppins"
+                onFocus={() => setIsSearchActive(true)}
+                onBlur={(e) => setIsSearchActive(e.target.value === "")}
               />
-              <span className="ml-2 text-xl font-bold text-gray-800">
-                Donix AvtoZapchasti
-              </span>
-            </Link>
-          </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/products">Products</NavLink>
-            <button
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              onClick={() => navigate("/cart")}
-            >
-              <ShoppingCart className="h-5 w-5 mr-2" />
-              Cart
-            </button>
-          </div>
-          <div className="flex items-center sm:hidden">
-            <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-              aria-expanded="false"
-            >
-              <span className="sr-only">Open main menu</span>
-              {isMenuOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
+              <div className="h-10 w-10 bg-bg-primary rounded-full flex items-center justify-center absolute top-[4px] right-[5px]">
+                <Icon
+                  icon="icon-search"
+                  size="sm"
+                  color={
+                    isSearchActive
+                      ? "var(--color-primary)"
+                      : "var(--color-text-secondary)"
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="basket bg-bg-secondary hover:bg-bg-tertiary cursor-pointer h-10 w-10 rounded-full flex items-center justify-center">
+              <Icon
+                icon="icon-basket"
+                size="sm"
+                color="var(--color-text-secondary)"
+              />
+            </div>
           </div>
         </div>
       </div>

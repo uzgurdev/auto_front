@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { Card, Carousel } from "components";
+import { Banner, Card, Carousel } from "components";
 import DEMO_PRODUCTS from "demo";
 
 const Home = () => {
@@ -11,6 +11,7 @@ const Home = () => {
 
   return (
     <div className="text-left mt-5">
+      <Banner />
       <div className="popular flex flex-col gap-2">
         <h2 className="font-bold text-2xl">Popular</h2>
         <Carousel

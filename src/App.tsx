@@ -1,15 +1,13 @@
 import { Navbar } from "./components";
-import "./app.css";
 import { Outlet } from "react-router";
 
 const App = (): JSX.Element => {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="relative min-h-screen">
       <Navbar />
-      <div className="h-[60px]"></div>
-      <div className="text-center min-h-[90vh]">
+      <main className="pt-[120px] min-h-[calc(100vh-120px)] z-10">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 };
