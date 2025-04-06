@@ -21,6 +21,8 @@ module.exports = {
         "text-secondary": "#333333", // Dark gray for body text
         "text-muted": "#8a8989", // Medium gray for less important text
         "text-light": "#c8c8c8", // Light gray for footer text
+        "text-extra-light": "#CFCFCF",
+        "text-orange": "#FFA803",
 
         // Background colors
         "bg-primary": "#ffffff", // White background

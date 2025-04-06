@@ -1,1 +1,20 @@
-export type IconNames = "icon-phone" | "icon-search" | "icon-basket";
+export type IconNames =
+  | "icon-phone"
+  | "icon-search"
+  | "icon-bin"
+  | "icon-basket"
+  | "icon-basket-add"
+  | "icon-basket-check"
+  | "icon-down"
+  | "icon-mail"
+  | "icon-products-filters"
+  | "icon-person"
+  | "icon-close"
+  | "icon-brake"
+  | "icon-damper"
+  | "icon-filter"
+  | "icon-light"
+  | "icon-oil"
+  | "icon-stereo"
+  | "icon-wheel"
+  | "icon-exhaust";

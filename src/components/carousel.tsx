@@ -1,22 +1,19 @@
 import { useState, useRef, useEffect } from "react";
 import Card from "./card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-interface Product {
-  id: number;
-  title: string;
-  description?: string;
-  image?: string;
-  price?: number;
-  season?: string;
-}
+import { HomeApi, ProductsApi } from "modules";
 
 interface CarouselProps {
-  products: Product[];
+  products: HomeApi.Types.IHome.Recs.IProducts[];
   onViewAll: () => void;
+  currentCategory: string; // Add currentCategory prop
 }
 
-const Carousel: React.FC<CarouselProps> = ({ products, onViewAll }) => {
+const Carousel: React.FC<CarouselProps> = ({
+  products,
+  onViewAll,
+  currentCategory,
+}) => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -37,6 +34,36 @@ const Carousel: React.FC<CarouselProps> = ({ products, onViewAll }) => {
     return () => window.removeEventListener("resize", checkScroll);
   }, []);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (currentCategory !== "all") {
+      const firstProductIndex = products.findIndex(
+        (product) => product.category === currentCategory
+      );
+      if (container && firstProductIndex !== -1) {
+        const firstProductElement = container.children[
+          firstProductIndex
+        ] as HTMLElement;
+        if (firstProductElement) {
+          container.scrollTo({
+            left: firstProductElement.offsetLeft,
+            behavior: "smooth",
+          });
+        }
+      }
+    } else {
+      if (container) {
+        const firstProductElement = container.children[0] as HTMLElement;
+        if (firstProductElement) {
+          container.scrollTo({
+            left: firstProductElement.offsetLeft,
+            behavior: "smooth",
+          });
+        }
+      }
+    }
+  }, [currentCategory, products]);
+
   const scroll = (direction: "left" | "right") => {
     const container = containerRef.current;
     if (container) {
@@ -47,25 +74,17 @@ const Carousel: React.FC<CarouselProps> = ({ products, onViewAll }) => {
   };
 
   return (
-    <div className="relative max-w-[950px]">
+    <div className="relative max-w-full h-max">
       <div
         ref={containerRef}
         className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4"
         onScroll={checkScroll}
       >
         {products.map((product) => (
-          <div key={product.id} className="flex-shrink-0">
-            <Card {...product} />
+          <div key={product.productId} className="flex-shrink-0">
+            <Card {...product} onCart={() => {}} onClick={() => {}} />
           </div>
         ))}
-        <div className="flex-shrink-0 w-[250px] flex items-center justify-center">
-          <button
-            onClick={onViewAll}
-            className="w-full h-12 px-6 text-blue-600 transition-colors duration-150 border border-blue-600 rounded-lg focus:shadow-outline hover:bg-blue-50 focus:outline-none"
-          >
-            View All
-          </button>
-        </div>
       </div>
       {canScrollLeft && (
         <button

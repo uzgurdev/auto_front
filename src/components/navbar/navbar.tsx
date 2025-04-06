@@ -1,26 +1,33 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
-import { Menu, X, ShoppingCart, Phone, ChevronDown } from "lucide-react";
+import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
+import { useSelector } from "react-redux";
 
-import Logo from "../assets/images/logo.png";
-import { Icon } from "./icon";
+import { Store } from "store";
+import { UIActions } from "store/slices";
+import { RootState } from "store/store";
+
+import Logo from "../../assets/images/logo.png";
+import { Icon } from "../icon";
+import Search from "./search";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { languages, productsCountInCart } = useSelector(
+    (state: RootState) => state.ui
+  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchActive, setIsSearchActive] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("uz");
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[9999] bg-red shadow-xl h-[120px] w-full">
-      <div className="wrapper flex items-center pl-[108px]">
-        <Link to="/" className="flex items-center w-[120px] h-[92px]">
+    <div className="fixed top-0 left-0 right-0 z-[9999] bg-red shadow-xl h-[120px] w-full">
+      <div className="wrapper flex items-center pl-[108px] bg-bg-primary">
+        <Link
+          to={`/${currentLang}`}
+          className="flex items-center w-[120px] h-[92px]"
+        >
           <img
             src={Logo}
             alt="Logo"
@@ -29,7 +36,7 @@ const Navbar = () => {
             className="h-120 w-auto"
           />
         </Link>
-        <div className="right-wrapper flex-col items-center w-full relative">
+        <div className="right-wrapper flex-col items-center w-full relative z-40">
           <div className="absolute inset-0 h-10 bg-primary clip-path-diagonal -z-10"></div>
           <div className="highlighted-top bg-transparent h-10 w-full shadow-none shadow-transparent flex items-center justify-end pr-[108px] font-Poppins font-[400] overflow-visible">
             <div className="wrapper flex items-center gap-10 w-[265px] text-sm">
@@ -47,9 +54,7 @@ const Navbar = () => {
                   onClick={() => setIsLangOpen(!isLangOpen)}
                   className="flex items-center gap-1 cursor-pointer"
                 >
-                  <span className="text-white">
-                    {currentLang.toUpperCase()}
-                  </span>
+                  <span className="text-white">{languages.toUpperCase()}</span>
                   <ChevronDown
                     className={`text-white transition-transform ${
                       isLangOpen ? "rotate-180" : ""
@@ -70,6 +75,9 @@ const Navbar = () => {
                         onClick={() => {
                           setIsLangOpen(false);
                           setCurrentLang(lang);
+                          Store.dispatch(
+                            UIActions.setLanguage(lang as "uz" | "ru" | "en")
+                          );
                         }}
                       >
                         {lang.toUpperCase()}
@@ -82,33 +90,18 @@ const Navbar = () => {
           </div>
 
           <div className="bottom-wrapper h-20 pr-[108px] flex gap-5 items-center justify-end">
-            <div className="searchbar w-[650px] h-[50px] rounded-[50px] bg-bg-secondary outline-none relative active:text-primary">
-              <input
-                type="text"
-                placeholder="Qidiruv..."
-                className="w-full h-full bg-transparent px-[30px] outline-none font-Poppins"
-                onFocus={() => setIsSearchActive(true)}
-                onBlur={(e) => setIsSearchActive(e.target.value === "")}
-              />
-              <div className="h-10 w-10 bg-bg-primary rounded-full flex items-center justify-center absolute top-[4px] right-[5px]">
-                <Icon
-                  icon="icon-search"
-                  size="sm"
-                  color={
-                    isSearchActive
-                      ? "var(--color-primary)"
-                      : "var(--color-text-secondary)"
-                  }
-                />
-              </div>
-            </div>
+            <Search {...{ languages }} />
 
-            <div className="basket bg-bg-secondary hover:bg-bg-tertiary cursor-pointer h-10 w-10 rounded-full flex items-center justify-center">
+            <div className="basket relative bg-bg-secondary hover:bg-bg-tertiary cursor-pointer h-10 w-10 rounded-full flex items-center justify-center">
               <Icon
                 icon="icon-basket"
                 size="sm"
                 color="var(--color-text-secondary)"
+                onClick={() => navigate(`/${languages}/cart`)}
               />
+              <span className="absolute top-[-5px] right-[-5px] w-[20px] h-[20px] bg-primary rounded-full box-border grid place-items-center text-bg-primary text-[10px]">
+                {productsCountInCart}
+              </span>
             </div>
           </div>
         </div>
@@ -131,7 +124,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
-    </nav>
+    </div>
   );
 };
 
@@ -165,4 +158,4 @@ const MobileNavLink = ({
   </Link>
 );
 
-export default Navbar;
+export default memo(Navbar);

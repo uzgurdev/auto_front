@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+*::selection {
+  background: var(--color-primary);
+  color: var(--color-text-primary-light);
+}
+
 @font-face {
   font-family: "Poppins-woff2";
   src: url("../../../public/fonts/Poppins/Poppins-Regular.woff2")
@@ -43,7 +48,7 @@
     --color-border-dark: #333333;
 
     /* Status colors */
-    --color-success: #48bc4e;
+    --color-success: #10ec0080;
     --color-warning: #ffa803;
     --color-info: #345eff;
   }
@@ -66,5 +71,19 @@
 
   .searchbar {
     box-shadow: none;
+  }
+
+  .dot-active:nth-child(1):before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    display: block;
+    border: 1px solid var(--color-primary);
+    border-radius: 50%;
+
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    transform: translate(-5%, -5%);
   }
 }
