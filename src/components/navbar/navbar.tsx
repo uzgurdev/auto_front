@@ -47,7 +47,7 @@ const Navbar = () => {
                   iconSize="sm"
                   color="var(--color-text-primary-light)"
                 />
-                <span className="text-white">+998 99 999 99 99</span>
+                <a href="tel:+998999999999" className="text-white">+998 99 999 99 99</a>
               </div>
               <div className="lang relative overflow-visible">
                 <button

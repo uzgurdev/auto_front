@@ -27,8 +27,7 @@ const RecommendationSec = () => {
       const products = Object.values(data.data.mostOrderedByCategory)
         .map((item) => item.products)
         .flat();
-      console.log("recs", data.data);
-      console.log("products", products);
+        
       Store.dispatch(UIActions.setRecs(data.data));
       setState((prev) => ({ ...prev, recs: products }));
 

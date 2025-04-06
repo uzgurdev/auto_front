@@ -17,7 +17,7 @@ const QuickLink = ({ text, params }: QuickL) => {
   return (
     <div
       className="min-w-36 max-w-max h-12 flex items-center justify-center gap-[10px] rounded-md bg-bg-tertiary text-border-dark font-Poppins font-[400] text-xs cursor-pointer p-2"
-      onClick={() => navigate(`/${languages}/products/${params}`)}
+      onClick={() => navigate(`/${languages}/products?${params}`)}
     >
       <p className="text-xl">⚙️</p>
       {/* <Icon icon={icon} size="sm" color="var(--color-border-dark)" /> */}

@@ -7,6 +7,7 @@ import { Store } from "store";
 import { UIActions } from "store/slices";
 import { RootState } from "store/store";
 import { ProductsApi } from "modules";
+import { useSearchParams } from "react-router";
 
 interface Product {
   id: number;
@@ -21,6 +22,9 @@ interface Product {
 const Products = () => {
   const [filteredProducts, setFilteredProducts] = useState(DEMO_PRODUCTS);
   const { cart } = useSelector((state: RootState) => state.ui);
+  const [searchParams] = useSearchParams();
+  const filters = searchParams.get("filters");
+  console.log(filters);
 
   const [{ startIdx, endIdx, currentPage, isModalOpen }, setState] = useState({
     startIdx: 0,

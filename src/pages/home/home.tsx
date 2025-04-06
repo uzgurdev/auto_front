@@ -88,7 +88,6 @@ const Home = () => {
         const { data } = await HomeApi.Api.Home();
         setData(data.data);
         setIsLoading(false);
-        console.log({ response: data.data });
       } catch (error) {
         setIsLoading(false);
         console.error("Error fetching products:", error);
@@ -116,7 +115,7 @@ const Home = () => {
             <Banner.QuickLink
               key={link._id}
               text={link.name}
-              params={`filter=${link}`}
+              params={`filter=${link.name}`}
             />
           ))}
         </div>
