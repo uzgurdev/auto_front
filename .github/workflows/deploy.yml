@@ -13,12 +13,6 @@ jobs:
       - name: 🧹 Checkout code
         uses: actions/checkout@v3
 
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'yarn'
-
       - name: 🧱 Install dependencies and build
         run: |
           yarn install
@@ -57,25 +51,25 @@ jobs:
             cd /var/www/html
             echo "📁 Files uploaded:"
             ls -lah
-            
+
             # Move dist contents to web root
             if [ -d "dist" ]; then
               echo "📦 Moving React build files to web root..."
               cp -r dist/* . 2>/dev/null || echo "No files to move"
               rm -rf dist
             fi
-            
+
             echo "📄 Final web root contents:"
             ls -lah
-            
+
             # Set proper permissions
             chown -R www-data:www-data /var/www/html 2>/dev/null || echo "Setting permissions as root"
             chmod -R 755 /var/www/html
-            
+
             # Restart Nginx
             echo "🔄 Restarting Nginx..."
             systemctl reload nginx || systemctl restart nginx
-            
+
             echo "✅ React frontend deployment complete!"
 
       - name: ✅ Done
