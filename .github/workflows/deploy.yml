@@ -1,0 +1,76 @@
+name: Deploy React Frontend to Droplet
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧹 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🧱 Install dependencies and build
+        run: |
+          yarn install
+          yarn build
+
+      - name: 🧪 Verify build output
+        run: |
+          echo "🗂️ Workspace root:"
+          ls -lah
+          echo "📁 dist folder:"
+          ls -lah dist || echo "dist folder missing"
+          echo "📄 Files to upload:"
+          find dist -type f 2>/dev/null || echo "No dist files found"
+          ls -lah package.json
+
+      - name: 📦 Upload to Droplet
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: root
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: 22
+          source: "dist/,package.json"
+          target: "/var/www/html/"
+          overwrite: true
+          debug: true
+
+      - name: 🚀 Deploy and setup
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: root
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/html
+            echo "📁 Files uploaded:"
+            ls -lah
+
+            # Move dist contents to web root
+            if [ -d "dist" ]; then
+              echo "📦 Moving React build files to web root..."
+              cp -r dist/* . 2>/dev/null || echo "No files to move"
+              rm -rf dist
+            fi
+
+            echo "📄 Final web root contents:"
+            ls -lah
+
+            # Set proper permissions
+            chown -R www-data:www-data /var/www/html 2>/dev/null || echo "Setting permissions as root"
+            chmod -R 755 /var/www/html
+
+            # Restart Nginx
+            echo "🔄 Restarting Nginx..."
+            systemctl reload nginx || systemctl restart nginx
+
+            echo "✅ React frontend deployment complete!"
+
+      - name: ✅ Done
+        run: echo "🚀 React frontend deployed successfully!"
