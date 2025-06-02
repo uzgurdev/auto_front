@@ -22,10 +22,10 @@ jobs:
         run: |
           echo "🗂️ Workspace root:"
           ls -lah
-          echo "📁 dist folder:"
-          ls -lah dist || echo "dist folder missing"
+          echo "📁 build folder:"
+          ls -lah build || echo "build folder missing"
           echo "📄 Files to upload:"
-          find dist -type f 2>/dev/null || echo "No dist files found"
+          find build -type f 2>/dev/null || echo "No build files found"
           ls -lah package.json
 
       - name: 📦 Upload to Droplet
@@ -35,7 +35,7 @@ jobs:
           username: root
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          source: "dist/,package.json"
+          source: "build/,package.json"
           target: "/var/www/html/"
           overwrite: true
           debug: true
@@ -52,11 +52,11 @@ jobs:
             echo "📁 Files uploaded:"
             ls -lah
 
-            # Move dist contents to web root
-            if [ -d "dist" ]; then
+            # Move build contents to web root
+            if [ -d "build" ]; then
               echo "📦 Moving React build files to web root..."
-              cp -r dist/* . 2>/dev/null || echo "No files to move"
-              rm -rf dist
+              cp -r build/* . 2>/dev/null || echo "No files to move"
+              rm -rf build
             fi
 
             echo "📄 Final web root contents:"
