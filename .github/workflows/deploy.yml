@@ -17,15 +17,33 @@ jobs:
         run: |
           yarn install
           yarn build
+        env:
+          CI: false
+          GENERATE_SOURCEMAP: false  # Optional: reduces build size
 
       - name: 🧪 Verify build output
         run: |
           echo "🗂️ Workspace root:"
           ls -lah
-          echo "📁 build folder:"
-          ls -lah build || echo "build folder missing"
-          echo "📄 Files to upload:"
-          find build -type f 2>/dev/null || echo "No build files found"
+          
+          # Check for both common React build folder names
+          if [ -d "build" ]; then
+            echo "📁 build folder found:"
+            ls -lah build/
+            echo "📄 build file count: $(find build -type f | wc -l)"
+            echo "BUILD_FOLDER=build" >> $GITHUB_ENV
+          elif [ -d "dist" ]; then
+            echo "📁 dist folder found:"
+            ls -lah dist/
+            echo "📄 dist file count: $(find dist -type f | wc -l)"
+            echo "BUILD_FOLDER=dist" >> $GITHUB_ENV
+          else
+            echo "❌ No build output folder found!"
+            echo "Available folders:"
+            ls -lah
+            exit 1
+          fi
+          
           ls -lah package.json
 
       - name: 📦 Upload to Droplet
@@ -35,7 +53,7 @@ jobs:
           username: root
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          source: "build/,package.json"
+          source: "$build/,package.json"
           target: "/var/www/html/"
           overwrite: true
           debug: false
@@ -52,11 +70,15 @@ jobs:
             echo "📁 Files uploaded:"
             ls -lah
 
-            # Move build contents to web root
+            # Move build contents to web root (handles both build and dist)
             if [ -d "build" ]; then
               echo "📦 Moving React build files to web root..."
-              cp -r build/* . 2>/dev/null || echo "No files to move"
+              cp -r build/* . 2>/dev/null || echo "No files to move from build"
               rm -rf build
+            elif [ -d "dist" ]; then
+              echo "📦 Moving React dist files to web root..."
+              cp -r dist/* . 2>/dev/null || echo "No files to move from dist"
+              rm -rf dist
             fi
 
             echo "📄 Final web root contents:"
