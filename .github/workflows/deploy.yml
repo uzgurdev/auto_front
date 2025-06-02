@@ -38,7 +38,7 @@ jobs:
           source: "build/,package.json"
           target: "/var/www/html/"
           overwrite: true
-          debug: true
+          debug: false
 
       - name: 🚀 Deploy and setup
         uses: appleboy/ssh-action@v1.0.3
