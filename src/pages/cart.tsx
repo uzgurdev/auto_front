@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { Minus, Plus, X, ShoppingBag } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 
 import CART from "../assets/images/cart.png";
 import { Icon, Modal } from "components";
@@ -10,47 +10,76 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import { Store } from "store";
 import { UIActions } from "store/slices";
-import { CartApi, CartTypes } from "modules/cart";
+import { CartApi } from "modules";
+import { StorageManager } from "utils";
 
 export default function CartPage() {
-  const { languages, cart } = useSelector((state: RootState) => state.ui);
-  const [cartItems, setCartItems] = useState<CartTypes.ICart.ICartItem[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(true);
-  const [isSubmitted, setIsSubmitted] = useState(true);
+  const { languages, cart } = useSelector((state: RootState) => state.ui);  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitted] = useState(true);  const [{ isSubmitting }, setState] = useState({
+    isSubmitting: false,
+  });
 
   const inputs = useRef([
     {
-      name: "Haridor ism-sharifi",
+      label: "Haridor ism-sharifi",
+      name: "name",
       placeholder: "Ism familiyangizni kiriting",
       icon: "icon-person",
+      type: "text",
     },
     {
-      name: "Telefon raqam",
+      label: "Telefon raqam",
+      name: "phone",
       placeholder: "Telefon raqamingizni kiriting",
       icon: "icon-phone-outline",
+      type: "tel",
     },
     {
-      name: "Telegram/WhatsApp username",
+      label: "Telegram/WhatsApp username",
+      name: "telegramUsername",
       placeholder: "Telegram/WhatsApp usernameingizni kiriting",
       icon: "icon-mail",
+      type: "email",
     },
     {
-      name: "Manzil",
+      label: "Manzil",
+      name: "location",
       placeholder: "Manzilingizni kiriting",
       icon: "icon-location",
+      type: "text",
     },
-  ]);
-
-  useEffect(() => {
+  ]);  useEffect(() => {
     const fetchCartItems = async () => {
-      const response = await CartApi.Cart();
-      setCartItems(response.data.items);
+      try {
+        const response = await CartApi.CartApi.cart();
+        console.log('Cart data:', response.data);
+        // Store.dispatch(UIActions.setCart(response.data));
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
     };
     fetchCartItems();
   }, []);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log({ e, target: e.currentTarget });
+    if (!isSubmitted) return;
+    try {
+      setState((prev) => ({ ...prev, isSubmitting: true }));
+      const formData = new FormData(e.currentTarget);
+      const data = Object.fromEntries(formData.entries());
+      console.log({ formData, dataObj: data });
+      const response = await CartApi.CartApi.submitOrder(data);
+      Store.dispatch(UIActions.setCart([]));
+      StorageManager.del("cart");
+
+      console.log({ data: response.data });
+    } catch (error) {
+      console.error("Error submitting order:", error);
+    } finally {
+      setState((prev) => ({ ...prev, isSubmitting: false }));
+    }
   };
 
   const updateQuantity = (id: string, newQuantity: number) => {
@@ -91,11 +120,11 @@ export default function CartPage() {
                         <div className="flex items-start">
                           <div className="flex-shrink-0 h-[150px] w-[150px]">
                             <img
-                              src={item.images[0]}
+                              src={item.image}
                               alt={item.name}
                               width={150}
                               height={150}
-                              className="rounded-[15px]"
+                              className="rounded-[15px] overflow-hidden object-cover w-[150px] h-[150px]"
                             />
                           </div>
                           <div className="ml-4 font-Poppins">
@@ -205,14 +234,16 @@ export default function CartPage() {
             >
               {inputs.current.map((input) => (
                 <div className="mt-[10px]">
-                  <label htmlFor="name" className="text-sm">
-                    {input.name}
+                  <label htmlFor={input.name} className="text-sm">
+                    {input.label}
                   </label>
                   <div className="input flex items-center justify-between shadow w-full h-[50px] py-4 px-5 rounded-[25px] mt-[10px]">
                     <input
-                      type="tel"
-                      name="name"
-                      id="name"
+                      type={input.type}
+                      required
+                      autoComplete="off"
+                      name={input.name}
+                      id={input.name}
                       placeholder={input.placeholder}
                       className="outline-none w-[90%]"
                     />
@@ -224,9 +255,11 @@ export default function CartPage() {
                     />
                   </div>
                 </div>
-              ))}
-              <button className="submit mt-5 w-full bg-primary text-bg-primary h-[50px] rounded-full text-sm outline-none">
-                Rasmiylashtirish
+              ))}              <button 
+                className="submit mt-5 w-full bg-primary text-bg-primary h-[50px] rounded-full text-sm outline-none disabled:opacity-50" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Rasmiylashtirilmoqda..." : "Rasmiylashtirish"}
               </button>
             </form>
           ) : (

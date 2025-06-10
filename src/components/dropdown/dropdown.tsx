@@ -55,7 +55,7 @@ const Dropdown: FC<DropdownI> = ({
 
   return (
     <div
-      className="wrapper w-[500px] h-[100px] relative font-[400] text-sm bg-bg-primary"
+      className="wrapper w-[500px] h-[100px] relative font-[400] text-sm"
       aria-disabled={disabled}
     >
       <label htmlFor="">{label}</label>

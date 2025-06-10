@@ -26,6 +26,31 @@ export namespace IProducts {
 
   export interface IProductResponse {
     results: IProduct[];
+    cartCount?: number;
     pagination: IPagination;
+  }
+
+  export interface IItems {
+    productId: string;
+    _id: string;
+    name: string;
+    image: string;
+    price: number;
+    quantity: number;
+    inStock: number;
+  }
+
+  export interface ICartResponse {
+    _id: string;
+    sessionId: string;
+    items: IItems[];
+    total: number;
+    tenantId: string;
+    currency: string;
+    expiresAt: string;
+    createdAt: string;
+    updatedAt: string;
+    lastModified: string;
+    __v: number;
   }
 }

@@ -86,6 +86,7 @@ const Home = () => {
 
       try {
         const { data } = await HomeApi.Api.Home();
+
         setData(data.data);
         setIsLoading(false);
       } catch (error) {

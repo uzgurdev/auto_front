@@ -19,13 +19,12 @@ const Navbar = () => {
   );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState("uz");
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[9999] bg-red shadow-xl h-[120px] w-full">
       <div className="wrapper flex items-center pl-[108px] bg-bg-primary">
         <Link
-          to={`/${currentLang}`}
+          to={`/${languages}`}
           className="flex items-center w-[120px] h-[92px]"
         >
           <img
@@ -47,7 +46,9 @@ const Navbar = () => {
                   iconSize="sm"
                   color="var(--color-text-primary-light)"
                 />
-                <a href="tel:+998999999999" className="text-white">+998 99 999 99 99</a>
+                <a href="tel:+998999999999" className="text-white">
+                  +998 99 999 99 99
+                </a>
               </div>
               <div className="lang relative overflow-visible">
                 <button
@@ -74,7 +75,6 @@ const Navbar = () => {
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => {
                           setIsLangOpen(false);
-                          setCurrentLang(lang);
                           Store.dispatch(
                             UIActions.setLanguage(lang as "uz" | "ru" | "en")
                           );

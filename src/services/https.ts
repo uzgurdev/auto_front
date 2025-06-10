@@ -2,7 +2,10 @@ import axios, { AxiosError } from "axios";
 
 export const ENV = process.env;
 
-const http = axios.create({ baseURL: ENV.REACT_APP_API_URL });
+const http = axios.create({
+  baseURL: ENV.REACT_APP_API_URL,
+  withCredentials: true,
+});
 
 http.interceptors.request.use((request) => {
   const url = window.location.hostname;
@@ -18,8 +21,13 @@ http.interceptors.request.use((request) => {
   return request;
 });
 
+// aa11d0c2-6ef1-44a0-8406-6d93e4c9b6ab
+
 http.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log("Current cookies:", document.cookie);
+    return response;
+  },
   async (error) => {
     if (error instanceof AxiosError) {
       console.log(error.response?.data.detail);

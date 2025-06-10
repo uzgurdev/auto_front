@@ -1,42 +1,85 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router";
+import { isEmpty } from "lodash";
 
-import { Card, Filters, Icon, Modal } from "components";
-import DEMO_PRODUCTS from "demo";
 import { Store } from "store";
 import { UIActions } from "store/slices";
 import { RootState } from "store/store";
 import { ProductsApi } from "modules";
-import { useSearchParams } from "react-router";
-
-interface Product {
-  id: number;
-  images: string[];
-  name: string;
-  brand: string;
-  price: number;
-  count: number;
-  originalPrice: number;
-}
+import { Card, Filters, Icon, Modal } from "components";
+import { StorageManager } from "utils";
 
 const Products = () => {
-  const [filteredProducts, setFilteredProducts] = useState(DEMO_PRODUCTS);
-  const { cart } = useSelector((state: RootState) => state.ui);
+  const { cart, searchProducts, searchData } = useSelector(
+    (state: RootState) => state.ui
+  );
   const [searchParams] = useSearchParams();
-  const filters = searchParams.get("filters");
-  console.log(filters);
+  const filters = searchParams.get("filter");
+  const query = searchParams.get("q");
 
-  const [{ startIdx, endIdx, currentPage, isModalOpen }, setState] = useState({
-    startIdx: 0,
-    endIdx: 5,
-    currentPage: 1,
+  const [{ currentPage, isModalOpen, isLoading }, setState] = useState({
+    currentPage:
+      (searchProducts.pagination ?? searchData.pagination).currentPage || 1,
     isModalOpen: null as null | ProductsApi.Types.IProducts.IProduct,
+    isLoading: false,
   });
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (isLoading) return;
+
+      setState((prev) => ({ ...prev, isLoading: true }));
+      try {
+        const queryString = new URLSearchParams({
+          page: currentPage.toString(),
+          limit: "20",
+          ...(filters || query ? { name: filters || query } : {}),
+        }).toString();
+
+        const { data } = await ProductsApi.Api.search(queryString);
+
+        Store.dispatch(
+          UIActions.setSearchProducts({
+            results: data.results,
+            pagination: data.pagination,
+          })
+        );
+        console.log("count:", data.cartCount);
+        Store.dispatch(UIActions.setCartCount(data.cartCount ?? 0));
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setState((prev) => ({ ...prev, isLoading: false }));
+      }
+    };
+
+    fetchProducts();
+  }, [filters, query, currentPage]);
+
+  useEffect(() => {
+    if (!isEmpty(searchProducts))
+      setState((prev) => ({
+        ...prev,
+        currentPage: (searchProducts.pagination ?? searchData.pagination)
+          .currentPage,
+      }));
+  }, [searchData.pagination, searchProducts.pagination]);
 
   const singleProductCount = cart.filter((p) => p._id === isModalOpen?._id);
 
   const handlePageChange = (page: number) => {
-    if (currentPage === page || page < 1) return;
+    const pagination = searchProducts.pagination ?? searchData.pagination;
+    if (
+      (page > pagination.currentPage && !pagination.hasNextPage) ||
+      (page < pagination.currentPage && !pagination.hasPrevPage)
+    ) {
+      return;
+    }
+    if (currentPage === page || page < 1) {
+      return;
+    }
+
     setState((prev) => ({
       ...prev,
       startIdx: (page - 1) * 5,
@@ -68,20 +111,19 @@ const Products = () => {
     // }));
   };
 
-  const handleCart = (id: string) => {
-    // const productIdx = filteredProducts.findIndex((p) => p._id === id);
-    // if (productIdx === -1) return;
-    // Store.dispatch(
-    //   UIActions.addToCart(
-    //     isModalOpen !== null
-    //       ? isModalOpen
-    //       : {
-    //           ...filteredProducts[productIdx],
-    //           originalPrice: filteredProducts[productIdx].price,
-    //           count: 1,
-    //         }
-    //   )
-    // );
+  const handleCart = async (id: string) => {
+    const { data } = await ProductsApi.Api.addToCart(id);
+    const cartIds = StorageManager.get("cart") || [];
+    const newCartIds = [...cartIds, id];
+
+    if (!isEmpty(data.data) && data.data.items.length > 0) {
+      data.data.items.forEach((item) => {
+        Store.dispatch(
+          UIActions.addToCart({ ...item, count: 1, originalPrice: item.price })
+        );
+      });
+    }
+    StorageManager.set("cart", newCartIds);
   };
 
   const handleProductCountInCart = (count: number) => {
@@ -103,6 +145,8 @@ const Products = () => {
     setState((prev) => ({ ...prev, isModalOpen: null }));
   };
 
+  console.log("searchProducts:", searchProducts);
+
   return (
     <div className="grid grid-cols-[1fr] md:grid-cols-[330px_1fr] mt-[50px] gap-[35px]">
       <div className="text-left">
@@ -110,20 +154,33 @@ const Products = () => {
       </div>
       <div className="products grid">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* {filteredProducts.slice(startIdx, endIdx).map((product) => (
+          {(searchProducts.results ?? searchData.results).map((product) => (
             <Card
               key={product._id}
               {...product}
               onClick={handleOpenModal}
               onCart={handleCart}
             />
-          ))} */}
+          ))}
         </div>
         <div className="pagination flex items-center justify-start gap-4 my-5">
           <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={startIdx === 0}
-            className="p-2 active:border-2 active:border-primary rounded-md"
+            onClick={(e) => {
+              // Add a safety check
+              if (
+                (searchProducts.pagination ?? searchData.pagination).hasPrevPage
+              ) {
+                handlePageChange(currentPage - 1);
+              }
+            }}
+            disabled={
+              !(searchProducts.pagination ?? searchData.pagination).hasPrevPage
+            }
+            className={`p-2 active:border-2 active:border-primary rounded-md ${
+              !(searchProducts.pagination ?? searchData.pagination).hasPrevPage
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
           >
             <Icon.Icon
               icon="icon-down"
@@ -132,11 +189,24 @@ const Products = () => {
               radiusSize={0}
               iconSize="13px"
               rotate={90}
+              className={
+                !(searchProducts.pagination ?? searchData.pagination)
+                  .hasPrevPage
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }
+              disabled={
+                !(searchProducts.pagination ?? searchData.pagination)
+                  .hasPrevPage
+              }
             />
           </button>
           <div className="flex items-center gap-2">
             {Array.from(
-              { length: Math.ceil(filteredProducts.length / 5) },
+              {
+                length: (searchProducts.pagination ?? searchData.pagination)
+                  .totalPages,
+              },
               (_, i) => i + 1
             ).map((page) => (
               <button
@@ -151,9 +221,22 @@ const Products = () => {
             ))}
           </div>
           <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={endIdx >= DEMO_PRODUCTS.length}
-            className="p-2 active:border-2 active:border-primary rounded-md"
+            onClick={(e) => {
+              // Add a safety check
+              if (
+                (searchProducts.pagination ?? searchData.pagination).hasNextPage
+              ) {
+                handlePageChange(currentPage + 1);
+              }
+            }}
+            disabled={
+              !(searchProducts.pagination ?? searchData.pagination).hasNextPage
+            }
+            className={`p-2 active:border-2 active:border-primary rounded-md ${
+              !(searchProducts.pagination ?? searchData.pagination).hasNextPage
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
           >
             <Icon.Icon
               icon="icon-down"
@@ -162,6 +245,16 @@ const Products = () => {
               radiusSize={0}
               iconSize="13px"
               rotate={-90}
+              className={
+                !(searchProducts.pagination ?? searchData.pagination)
+                  .hasNextPage
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }
+              disabled={
+                !(searchProducts.pagination ?? searchData.pagination)
+                  .hasNextPage
+              }
             />
           </button>
         </div>

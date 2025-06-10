@@ -24,7 +24,7 @@ interface SearchSectionProps {
 
 const SearchSection: FC<SearchSectionProps> = ({ data }) => {
   const navigate = useNavigate();
-  const { languages } = useSelector((state: RootState) => state.ui);
+  const { languages, searchData } = useSelector((state: RootState) => state.ui);
   const [{ initialData, values, optData }, setState] = useState({
     optData: {
       company: [] as filter[],
@@ -112,7 +112,6 @@ const SearchSection: FC<SearchSectionProps> = ({ data }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ e, values });
     const filters = `producer=${values.company}&carBrand=${values.transport_model}&carType=${values.transport_type}`;
     const { data } = await ProductsApi.Api.search(filters);
 
@@ -174,6 +173,7 @@ const SearchSection: FC<SearchSectionProps> = ({ data }) => {
             <button
               type="submit"
               className="submit w-[500px] h-[50px] bg-primary text-bg-primary rounded-full"
+              disabled={values.transport_model === ""}
             >
               Qidirish
             </button>

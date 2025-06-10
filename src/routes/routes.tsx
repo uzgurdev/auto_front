@@ -12,7 +12,7 @@ const Routes = () => {
     <Switch>
       <Route path="/:lang" element={<App />}>
         <Route index element={<HomePage.Home />} />
-        <Route path="/:lang/products/" element={<Products />} />
+        <Route path="/:lang/products/" element={<Products.Products />} />
         <Route path="/:lang/products/:productId" element={<span>Hello</span>} />
         <Route path="/:lang/cart" element={<Cart />} />
         <Route path="*" element={<Navigate to={`/${languages}`} />} />
