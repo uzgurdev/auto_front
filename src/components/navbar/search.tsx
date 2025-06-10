@@ -1,18 +1,20 @@
 import React, { ChangeEvent, useRef, useState } from "react";
 import { useOutsideClickHandler } from "hooks";
 
-import DEMO_PRODUCTS from "demo";
 import { Card, Icon, Modal } from "components";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Store } from "store";
 import { UIActions } from "store/slices";
+import { ProductsApi } from "modules";
 
 const Search = ({ languages }: { languages: string }) => {
+  const navigate = useNavigate();
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [value, setValue] = useState("");
   const [results, setResults] = useState<any[]>([]);
-  const [{ isModalOpen }, setState] = useState({
+  const [{ isModalOpen, data }, setState] = useState({
     isModalOpen: null as null | any,
+    data: null as null | any,
   });
 
   const wrapperRef = useRef(null);
@@ -20,12 +22,16 @@ const Search = ({ languages }: { languages: string }) => {
     setIsSearchActive(false);
   });
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const match = e.target.value.toLocaleLowerCase();
 
     setValue(match);
 
-    const newProducts = DEMO_PRODUCTS.map((product) => {
+    const { data } = await ProductsApi.Api.search(`query=${match}`);
+    console.log({ data });
+    setState((prev) => ({ ...prev, data }));
+
+    const newProducts = data.results.map((product) => {
       const word = product.name.toLowerCase();
       const isMatch = word.includes(match);
 
@@ -37,11 +43,6 @@ const Search = ({ languages }: { languages: string }) => {
           )}</span>`,
           afterMatch = word.slice(word.indexOf(match) + match.length);
         const fullTitle = beforeMatch + matchedWord + afterMatch;
-
-        console.log({
-          ...product,
-          title: fullTitle.replace(/\b\w/g, (letter) => letter.toUpperCase()),
-        });
 
         return {
           ...product,
@@ -95,6 +96,17 @@ const Search = ({ languages }: { languages: string }) => {
     );
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (results.length <= 0) return;
+      setIsSearchActive(false);
+      console.log("data", data);
+      Store.dispatch(UIActions.setSearchProducts(data));
+      navigate(`/${languages}/products?q=${value}`);
+      setResults([]);
+    }
+  };
+
   return (
     <div ref={wrapperRef}>
       <div
@@ -103,6 +115,7 @@ const Search = ({ languages }: { languages: string }) => {
             ? "bg-bg-secondary"
             : "bg-bg-primary border border-bg-secondary"
         }`}
+        onKeyDown={handleKeyDown}
       >
         <input
           type="text"
@@ -132,23 +145,21 @@ const Search = ({ languages }: { languages: string }) => {
             Umumiy 24 ta mahsulot topildi
           </div>
 
-          <div className="results w-full flex items-center justify-start gap-[10px] mt-[15px]">
-            {results
-              .slice(0, 3)
-              .map(
-                (product: any) =>
-                  product !== null && (
-                    <Card
-                      {...product}
-                      onClick={handleOpenModal}
-                      onCart={handleCart}
-                    />
-                  )
-              )}
+          <div className="results w-full overflow-y-auto no-scrollbar flex items-center justify-start gap-[10px] mt-[15px]">
+            {results.map(
+              (product: any) =>
+                product !== null && (
+                  <Card
+                    {...product}
+                    onClick={handleOpenModal}
+                    onCart={handleCart}
+                  />
+                )
+            )}
           </div>
 
-          <div className="footer w-full grid place-items-center text-primary underline">
-            <Link to={`/${languages}`}>Ko'proq</Link>
+          <div className="footer w-full grid place-items-center text-primary underline mt-5">
+            <Link to={`/${languages}/products?q=${value}`}>Ko'proq</Link>
           </div>
         </div>
       )}

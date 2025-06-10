@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UI } from "./types";
 import { HomeApi, ProductsApi } from "modules";
+import { StorageManager } from "utils";
 
 const initialState: UI.Appearance = {
   languages: "ru",
@@ -19,7 +20,34 @@ const initialState: UI.Appearance = {
     filters: "",
   },
   recs: {} as HomeApi.Types.IHome.Recs.IResponse["data"],
+  searchProducts: {} as ProductsApi.Types.IProducts.IProductResponse,
 };
+
+const initCart = async () => {
+  const cart = StorageManager.get("cart");
+  if (!cart?.length) return;
+
+  try {
+    const promises = cart.map((item) => ProductsApi.Api.addToCart(item));
+    const responses = await Promise.all(promises);
+
+    console.log({ promises, responses });
+
+    const newCart = responses
+      .filter((response) => response.data)
+      .map((response) => response.data.data.items)
+      .flat();
+
+    if (newCart.length) {
+      initialState.cart = newCart;
+      initialState.productsCountInCart = newCart.length;
+    }
+  } catch (error) {
+    console.error("Failed to initialize cart:", error);
+  }
+};
+
+// initCart();
 
 const UISlice = createSlice({
   name: "UI",
@@ -31,7 +59,7 @@ const UISlice = createSlice({
     addToCart: (
       state,
       action: PayloadAction<
-        ProductsApi.Types.IProducts.IProduct & {
+        ProductsApi.Types.IProducts.IItems & {
           count: number;
           originalPrice?: number;
         }
@@ -70,6 +98,25 @@ const UISlice = createSlice({
         state.productsCountInCart = state.cart.length;
       }
     },
+    setCartCount: (state, action: PayloadAction<number>) => {
+      state.productsCountInCart = action.payload;
+    },
+    setCart: (
+      state,
+      action: PayloadAction<ProductsApi.Types.IProducts.IItems[] | any[]>
+    ) => {
+      if(action.payload.length === 0) {
+        state.cart = [] as (ProductsApi.Types.IProducts.IItems & { count?: number; originalPrice: number; })[];
+        state.productsCountInCart = 0;
+        return;
+      }
+      const cart = action.payload.map((item) => ({
+        ...item,
+        originalPrice: item.price / item.quantity,
+      }));
+      state.cart = cart;
+      state.productsCountInCart = cart.length;
+    },
     setSearchData: (
       state,
       action: PayloadAction<UI.Appearance["searchData"]>
@@ -79,14 +126,23 @@ const UISlice = createSlice({
     setRecs: (state, action: PayloadAction<UI.Appearance["recs"]>) => {
       state.recs = action.payload;
     },
+    setSearchProducts: (
+      state,
+      action: PayloadAction<UI.Appearance["searchProducts"]>
+    ) => {
+      state.searchProducts = action.payload;
+    },
   },
 });
 
 export const {
   setLanguage,
   addToCart,
+  setCartCount,
   setProductsCountInCart,
+  setCart,
   setSearchData,
   setRecs,
+  setSearchProducts,
 } = UISlice.actions;
 export default UISlice.reducer;

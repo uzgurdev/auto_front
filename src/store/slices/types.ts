@@ -4,8 +4,8 @@ export namespace UI {
   export interface Appearance {
     languages: "uz" | "ru" | "en";
     productsCountInCart: number;
-    cart: (ProductsApi.Types.IProducts.IProduct & {
-      count: number;
+    cart: (ProductsApi.Types.IProducts.IItems & {
+      count?: number;
       originalPrice: number;
     })[];
     searchData: {
@@ -14,5 +14,6 @@ export namespace UI {
       filters: string;
     };
     recs: HomeApi.Types.IHome.Recs.IResponse["data"];
+    searchProducts: ProductsApi.Types.IProducts.IProductResponse;
   }
 }

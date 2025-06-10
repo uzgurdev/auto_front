@@ -1,23 +1,53 @@
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState } from "store/store";
 import { ProductsApi } from "modules";
 import { Icon } from "components";
+import { StorageManager } from "utils";
 
 interface Product extends ProductsApi.Types.IProducts.IProduct {
   onClick: (id: string) => void;
   onCart: (id: string) => void;
 }
+
+const IMG_URL = process.env.REACT_APP_IMAGE_URL;
+
 const Card: FC<Partial<Product>> = (Product) => {
   const { cart } = useSelector((state: RootState) => state.ui);
+  const [{ imageUrl }, setState] = useState({
+    imageUrl: "",
+  });
+
+  useEffect(() => {
+    const getImage = async () => {
+      if (imageUrl) return;
+
+      if (Product?.images?.length && !Product?.images[0].includes("https")) {
+        const image = await fetch(
+          `${IMG_URL}${Product?.images?.[0]
+            .replace("assets/", "")
+            .replace(".jpg", "")}`,
+          {
+            method: "GET",
+          }
+        );
+
+        const blob = await image.blob();
+        const url = URL.createObjectURL(blob);
+        setState((prev) => ({ ...prev, imageUrl: url }));
+      }
+    };
+    getImage();
+  }, [Product?.images, imageUrl]);
 
   const cartChecker = useCallback((): boolean => {
+    const cart = StorageManager.get("cart") as string[];
     if (!cart || !Array.isArray(cart) || cart.length === 0) {
       return false;
     }
-    return cart.some((item) => item?._id === Product?._id);
-  }, [Product?._id, cart]);
+    return cart.some((_id) => _id === Product?._id);
+  }, [Product?._id]);
 
   const handleClick = () => {
     Product?.onClick?.(Product?._id as string);
@@ -30,10 +60,18 @@ const Card: FC<Partial<Product>> = (Product) => {
   };
 
   return (
-    <div className="w-[250px] max-h-[360px] rounded-2xl shadow-sm">
+    <div className="min-w-[250px] max-h-[360px] rounded-2xl shadow-sm">
       <div className="relative rounded-[10px] mb-[10px]">
         <img
-          src={(Product?.images ?? []).length > 0 ? Product?.images?.[0] : ""}
+          src={
+            (Product?.images ?? []).length > 0
+              ? `${
+                  Product?.images?.[0].includes("https")
+                    ? Product?.images?.[0]
+                    : imageUrl
+                }`
+              : ""
+          }
           alt={Product?.name}
           className="rounded-[10px] w-full h-[200px] object-cover"
         />
@@ -61,15 +99,9 @@ const Card: FC<Partial<Product>> = (Product) => {
         <p className="font-[400] text-text-muted">{Product?.producer}</p>
         <h3
           className="font-[500] text-text-primary"
-          dangerouslySetInnerHTML={{ __html: Product?.name || "" }}
+          dangerouslySetInnerHTML={{ __html: Product.name as string }}
         />
-        <p className="font-[500] my-[10px]">
-          $
-          {Product?.price?.toLocaleString("us-EN", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
-        </p>
+        <p className="font-[500] my-[10px]">${Product?.price}</p>
         <button
           onClick={handleClick}
           className="w-full py-2 px-4 bg-bg-secondary text-text-secondary font-semibold rounded-lg transition-colors duration-200 hover:bg-bg-tertiary focus:outline-none focus:ring-text-muted outline-none"
