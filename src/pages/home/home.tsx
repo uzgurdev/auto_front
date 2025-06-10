@@ -95,7 +95,7 @@ const Home = () => {
     };
 
     fetchProducts();
-  });
+  }, []);
 
   useEffect(() => {
     if (isPaused) return; // Don't start interval if paused

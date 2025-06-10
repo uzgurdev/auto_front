@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Minus, Plus, X, ShoppingBag } from "lucide-react";
 
 import CART from "../assets/images/cart.png";
@@ -10,43 +10,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import { Store } from "store";
 import { UIActions } from "store/slices";
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
-const initialCartItems: CartItem[] = [
-  {
-    id: 1,
-    name: "Summer T-Shirt",
-    price: 19.99,
-    quantity: 2,
-    image: "https://placehold.co/150x150",
-  },
-  {
-    id: 2,
-    name: "Winter Jacket",
-    price: 89.99,
-    quantity: 1,
-    image: "https://placehold.co/150x150",
-  },
-  {
-    id: 3,
-    name: "Winter Jacket",
-    price: 89.99,
-    quantity: 1,
-    image: "https://placehold.co/150x150",
-  },
-];
+import { CartApi, CartTypes } from "modules/cart";
 
 export default function CartPage() {
   const { languages, cart } = useSelector((state: RootState) => state.ui);
-  const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<CartTypes.ICart.ICartItem[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(true);
 
   const inputs = useRef([
@@ -71,6 +40,14 @@ export default function CartPage() {
       icon: "icon-location",
     },
   ]);
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      const response = await CartApi.Cart();
+      setCartItems(response.data.items);
+    };
+    fetchCartItems();
+  }, []);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -97,7 +74,7 @@ export default function CartPage() {
           <p className="text-text-secondary opacity-35 mt-2 text-[22px] font-[400]">
             <Link to={`/${languages}/products`} className="underline">
               Mahsulotlar
-            </Link>{" "}
+            </Link>
             sahifasiga qaytib o’zingizga <br /> kerakli mahsulotlarni qo’shing
           </p>
         </div>
@@ -248,7 +225,7 @@ export default function CartPage() {
                   </div>
                 </div>
               ))}
-              <button className="submit mt-5 w-full bg-primary text-bg-primary h-[50px] rounded-full text-sm">
+              <button className="submit mt-5 w-full bg-primary text-bg-primary h-[50px] rounded-full text-sm outline-none">
                 Rasmiylashtirish
               </button>
             </form>
