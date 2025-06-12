@@ -128,11 +128,11 @@ const Single = () => {
                 <p className="text-text-secondary font-Poppins font-medium text-lg">
                   Joylashuvi:
                   <span className="text-text-muted"> Oldi/chap</span>
-                </p>
+                </p>{" "}
               </div>
-              <p className="text-text-muted font-Poppins font-medium text-lg">
+              {/* <p className="text-text-muted font-Poppins font-medium text-lg">
                 Mavjud: <span className="text-success">10 tadan ko'p</span>
-              </p>
+              </p> */}
             </div>
           </div>
 

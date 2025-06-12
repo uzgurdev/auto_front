@@ -1,18 +1,22 @@
 import { useState, useRef, useEffect } from "react";
 import Card from "./card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { HomeApi, ProductsApi } from "modules";
+import { HomeApi } from "modules";
 
 interface CarouselProps {
   products: HomeApi.Types.IHome.Recs.IProducts[];
   onViewAll: () => void;
   currentCategory: string; // Add currentCategory prop
+  onOpenModal?: (id: string) => void;
+  onCart?: (id: string) => void;
 }
 
 const Carousel: React.FC<CarouselProps> = ({
   products,
   onViewAll,
   currentCategory,
+  onOpenModal,
+  onCart,
 }) => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -80,9 +84,16 @@ const Carousel: React.FC<CarouselProps> = ({
         className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4"
         onScroll={checkScroll}
       >
+        {" "}
         {products.map((product) => (
           <div key={product.productId} className="flex-shrink-0">
-            <Card {...product} onCart={() => {}} onClick={() => {}} />
+            <Card
+              {...product}
+              onCart={onCart ? () => onCart(product.productId) : () => {}}
+              onClick={
+                onOpenModal ? () => onOpenModal(product.productId) : () => {}
+              }
+            />
           </div>
         ))}
       </div>

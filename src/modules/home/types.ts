@@ -40,7 +40,7 @@ export namespace IHome {
       count: number;
       producer: string;
       images: string[];
-      price: number;
+      price: string;
       category: string;
     }
 

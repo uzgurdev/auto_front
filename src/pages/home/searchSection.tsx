@@ -1,138 +1,185 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { Store } from "store";
 import { UIActions } from "store/slices";
 
-import { ProductsApi } from "modules";
+import { HomeApi } from "modules";
 import { Dropdown } from "components";
 
 import SectionImage from "../../assets/images/section_2.png";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
+import { isEmpty } from "lodash";
 
-interface filter {
-  _id: string;
-  type: "producer" | "carBrand" | "carType";
-  name: string;
-  count: number;
-}
+type filter = string[];
 
-interface SearchSectionProps {
-  data?: filter[];
-}
-
-const SearchSection: FC<SearchSectionProps> = ({ data }) => {
+const SearchSection = () => {
   const navigate = useNavigate();
-  const { languages, searchData } = useSelector((state: RootState) => state.ui);
-  const [{ initialData, values, optData }, setState] = useState({
-    optData: {
-      company: [] as filter[],
-      models: [] as filter[],
-      types: [
-        { name: "Sedan", _id: "0", type: "carType", count: 2 },
-        { name: "Hatchback", _id: "1", type: "carType", count: 2 },
-        { name: "SUV", _id: "2", type: "carType", count: 2 },
-        { name: "Crossover", _id: "3", type: "carType", count: 2 },
-      ],
-    },
-    initialData: {
-      company: [] as filter[],
-      models: [] as filter[],
+  const { languages } = useSelector((state: RootState) => state.ui);
+  const [{ values, data }, setState] = useState({
+    data: {
+      producer: [] as filter,
+      brands: [] as filter,
+      models: [] as filter,
     },
     values: {
-      company: "",
-      transport_type: "",
+      producer: "",
+      transport_brand: "",
       transport_model: "",
     },
   });
-
   useEffect(() => {
-    const initOptDataSetter = () => {
-      const newCompany = data?.filter((item) => item.type === "producer");
-      const newModel = data?.filter((item) => item.type === "carBrand");
-
-      setState((prev) => ({
-        ...prev,
-        optData: {
-          ...prev.optData,
-          company: newCompany as filter[],
-          models: newModel as filter[],
-        },
-        initialData: {
-          company: newCompany as filter[],
-          models: newModel as filter[],
-        },
-      }));
+    const fetchProducers = async () => {
+      if (isEmpty(data.producer)) {
+        try {
+          console.log("Fetching producers...");
+          const response = await HomeApi.Api.FilterProducers();
+          console.log("Producers response:", response.data);
+          setState((prev) => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              producer: response.data.data,
+            },
+          }));
+        } catch (error) {
+          console.error("Error fetching producers:", error);
+        }
+      }
     };
 
-    initOptDataSetter();
-  }, [data]);
+    fetchProducers();
+  }, [data.producer]);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      if (values.producer && isEmpty(data.brands)) {
+        try {
+          console.log("Fetching brands for producer:", values.producer);
+          const response = await HomeApi.Api.FilterBrands(values.producer);
+          console.log("Brands response:", response.data);
+          setState((prev) => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              brands: response.data.data,
+            },
+          }));
+        } catch (error) {
+          console.error("Error fetching brands:", error);
+        }
+      }
+    };
+
+    if (values.producer) {
+      fetchBrands();
+    }
+  }, [values.producer, data.brands]);
+
+  useEffect(() => {
+    const fetchModels = async () => {
+      if (values.producer && values.transport_brand && isEmpty(data.models)) {
+        try {
+          const response = await HomeApi.Api.FilterModels(
+            values.producer,
+            values.transport_brand
+          );
+          setState((prev) => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              models: response.data.data,
+            },
+          }));
+        } catch (error) {
+          console.error("Error fetching models:", error);
+        }
+      }
+    };
+
+    if (values.producer && values.transport_brand) {
+      fetchModels();
+    }
+  }, [values.producer, values.transport_brand, data.models]);
 
   const handleChange = (value: string, name: string) => {
-    if (name === "company") {
-      const newCompany = value
-        ? initialData.company.filter((item) =>
-            item.name.toLowerCase().includes(value.toLowerCase())
-          )
-        : initialData.company;
-
-      setState((prev) => ({
-        ...prev,
-        optData: { ...prev.optData, company: newCompany },
-        values: {
-          ...prev.values,
-          [name]: value,
-        },
-      }));
-    }
-
-    if (name === "transport_model") {
-      const newModel = value
-        ? initialData.models.filter((item) =>
-            item.name.toLowerCase().includes(value.toLowerCase())
-          )
-        : initialData.models;
-
+    if (name === "producer") {
+      // Clear dependent dropdowns when producer changes
       setState((prev) => ({
         ...prev,
         values: {
           ...prev.values,
           [name]: value,
+          transport_brand: "", // Clear brand when producer changes
+          transport_model: "", // Clear model when producer changes
         },
-        optData: { ...prev.optData, models: newModel },
+        data: {
+          ...prev.data,
+          brands: [], // Clear brands data
+          models: [], // Clear models data
+        },
+      }));
+    } else if (name === "transport_brand") {
+      // Clear dependent dropdown when brand changes
+      setState((prev) => ({
+        ...prev,
+        values: {
+          ...prev.values,
+          [name]: value,
+          transport_model: "", // Clear model when brand changes
+        },
+        data: {
+          ...prev.data,
+          models: [], // Clear models data
+        },
+      }));
+    } else {
+      setState((prev) => ({
+        ...prev,
+        values: { ...prev.values, [name]: value },
       }));
     }
-
-    setState((prev) => ({
-      ...prev,
-      values: { ...prev.values, [name]: value },
-    }));
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const filters = `producer=${values.company}&carBrand=${values.transport_model}&carType=${values.transport_type}`;
-    const { data } = await ProductsApi.Api.search(filters);
 
-    Store.dispatch(
-      UIActions.setSearchData({
-        results: data.results,
-        pagination: data.pagination,
-        filters,
-      })
-    );
+    try {
+      const { data } = await HomeApi.Api.FilterSearch(
+        "producer=" +
+          values.producer +
+          "&brand=" +
+          values.transport_brand +
+          "&model=" +
+          values.transport_model
+      );
 
-    setState((prev) => ({
-      ...prev,
-      values: { company: "", transport_model: "", transport_type: "" },
-    }));
+      const filters = `producer=${values.producer}&carBrand=${values.transport_brand}&carModel=${values.transport_model}`;
 
-    navigate(`/${languages}/products`, {
-      state: {
-        filters,
-      },
-    });
+      Store.dispatch(
+        UIActions.setSearchData({
+          results: data.data,
+          pagination: data.pagination,
+          filters,
+        })
+      );
+
+      // Navigate with URL parameters so products page can use them
+      const searchParams = new URLSearchParams({
+        producer: values.producer,
+        carBrand: values.transport_brand,
+        carModel: values.transport_model,
+      });
+
+      navigate(`/${languages}/products?${searchParams.toString()}`);
+
+      setState((prev) => ({
+        ...prev,
+        values: { producer: "", transport_model: "", transport_brand: "" },
+      }));
+    } catch (error) {
+      console.error("Error during search:", error);
+    }
   };
 
   return (
@@ -143,33 +190,33 @@ const SearchSection: FC<SearchSectionProps> = ({ data }) => {
       <div className="bottom flex items-center justify-between w-full">
         <div className="form w-1/2">
           <form onSubmit={handleSubmit}>
+            {" "}
             <Dropdown.Dropdown
               label="Ishlab chiqaruvchi kampaniya"
               placeholder="Ishlab chiqaruvchi kampaniya"
               onHandle={handleChange}
-              data={optData.company}
-              value={values.company}
-              name="company"
+              data={data.producer.map((item) => ({ name: item, _id: item }))}
+              value={values.producer}
+              name="producer"
             />
             <Dropdown.Dropdown
               label="Transport turi"
               placeholder="Transport turini tanlang"
               onHandle={handleChange}
-              data={optData.types}
-              value={values.transport_type}
-              name="transport_type"
-              disabled={values.company === ""}
+              data={data.brands.map((item) => ({ name: item, _id: item }))}
+              value={values.transport_brand}
+              name="transport_brand"
+              disabled={values.producer === ""}
             />
             <Dropdown.Dropdown
               label="Transport modeli"
               placeholder="Transport modeli"
               onHandle={handleChange}
-              data={optData.models}
+              data={data.models.map((item) => ({ name: item, _id: item }))}
               value={values.transport_model}
               name="transport_model"
-              disabled={values.transport_type === ""}
+              disabled={values.transport_brand === ""}
             />
-
             <button
               type="submit"
               className="submit w-[500px] h-[50px] bg-primary text-bg-primary rounded-full"

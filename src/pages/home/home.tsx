@@ -11,55 +11,6 @@ import axios from "axios";
 import { HomeApi } from "modules";
 import RecommendationSec from "./recs";
 
-interface QuickL {
-  text: string;
-  icon: Icon.IconType.IconNames;
-  params: string;
-}
-
-const QuickLinks: QuickL[] = [
-  {
-    icon: "icon-wheel",
-    text: "WHEEL",
-    params: "filter=wheel",
-  },
-  {
-    icon: "icon-brake",
-    text: "BRAKE",
-    params: "filter=brake",
-  },
-  {
-    icon: "icon-damper",
-    text: "DAMPER",
-    params: "filter=damper",
-  },
-  {
-    icon: "icon-light",
-    text: "LIGHT",
-    params: "filter=light",
-  },
-  {
-    icon: "icon-stereo",
-    text: "STEREO",
-    params: "filter=stereo",
-  },
-  {
-    icon: "icon-oil",
-    text: "OIL",
-    params: "filter=oil",
-  },
-  {
-    icon: "icon-exhaust",
-    text: "EXHAUST",
-    params: "filter=exhaust",
-  },
-  {
-    icon: "icon-filter",
-    text: "FILTER",
-    params: "filter=filter",
-  },
-];
-
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -156,7 +107,7 @@ const Home = () => {
         </div>
       </div>
 
-      <SearchSection data={data?.filters} />
+      <SearchSection />
       <RecommendationSec />
 
       <PartTypes />

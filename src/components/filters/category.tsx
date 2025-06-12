@@ -2,13 +2,14 @@ import { FC, useState } from "react";
 import { Icon } from "components";
 
 interface CategoryProps {
-  data?: any[];
-  onClick?: (data: any[]) => {};
+  name: string;
+  data?: string[];
+  onClick?: (name: string, values: string) => void;
 }
 
-const Category: FC<CategoryProps> = ({ onClick, data }) => {
-  const [rotation, setRotation] = useState(0);
-  const [options, setOptions] = useState<any[]>([]);
+const Category: FC<CategoryProps> = ({ onClick, name, data }) => {
+  const [rotation, setRotation] = useState(180);
+  const [options, setOptions] = useState<string[]>([]);
 
   const handleIconCLick = () =>
     setRotation((prev) => (rotation === 0 ? 180 : 0));
@@ -19,7 +20,7 @@ const Category: FC<CategoryProps> = ({ onClick, data }) => {
         className="dropdown flex items-center justify-between cursor-pointer"
         onClick={handleIconCLick}
       >
-        <p className="text-sm font-normal font-Poppins">Category</p>
+        <p className="text-sm font-normal font-Poppins">{name}</p>
         <Icon.Icon
           icon="icon-down"
           size="sm"
@@ -34,23 +35,22 @@ const Category: FC<CategoryProps> = ({ onClick, data }) => {
           {data?.map((item, idx) => (
             <div
               className="flex items-center px-1 gap-2 cursor-pointer"
-              key={item.name + idx}
+              key={item + idx}
             >
               <input
-                type="checkbox"
-                name={item.name}
-                id={item.name}
-                checked={options.includes(item)}
-                onChange={(e) => {
-                  const newOptions = e.target.checked
-                    ? [...options, item]
-                    : options.filter((opt) => opt !== item);
-                  setOptions(newOptions);
-                  onClick?.(newOptions);
-                }}
-                className="h-4 w-4"
+              type="radio"
+              name={name}
+              id={item + idx}
+              checked={options.includes(item)}
+              onChange={(e) => {
+                if (e.target.checked) {
+                setOptions([item]);
+                onClick?.(name, item);
+                }
+              }}
+              className="h-4 w-4"
               />
-              <label htmlFor={item.name}>{item.name}</label>
+              <label htmlFor={item + idx}>{item}</label>
             </div>
           ))}
         </div>

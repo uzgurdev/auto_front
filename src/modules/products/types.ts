@@ -3,16 +3,17 @@ export namespace IProducts {
     _id: string;
     name: string;
     description: string;
-    price: number;
+    price: string; // Changed from number to string to match database format
     type: string;
-    carModel: string;
+    producer: string; // Producer brand (e.g., "GAMMA")
+    carBrand: string; // Car manufacturer (e.g., "Chevrolet")
+    carModel: string[]; // Car models (e.g., ["Nexia", "Ravon 3"])
+    carPartIds: string[]; // IDs of car parts
+    position: string;
     images: string[];
     status: boolean;
-    producer: string;
-    tenantId: string; // Uzbekistan or Kazakhstan
-    currency: string; // USD or KZT
-    inStock: number; // Stock quantity
-    lowStockAlert: number; // Low stock alert
+    tenantId: string;
+    currency: string;
   }
 
   export interface IPagination {
@@ -29,7 +30,6 @@ export namespace IProducts {
     cartCount?: number;
     pagination: IPagination;
   }
-
   export interface IItems {
     productId: string;
     _id: string;
@@ -37,7 +37,7 @@ export namespace IProducts {
     image: string;
     price: number;
     quantity: number;
-    inStock: number;
+    // inStock: number; // Commented out to disable stock functionality
   }
 
   export interface ICartResponse {

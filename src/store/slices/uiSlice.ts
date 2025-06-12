@@ -20,7 +20,22 @@ const initialState: UI.Appearance = {
     filters: "",
   },
   recs: {} as HomeApi.Types.IHome.Recs.IResponse["data"],
-  searchProducts: {} as ProductsApi.Types.IProducts.IProductResponse,
+  searchProducts: {
+    results: [],
+    pagination: {
+      currentPage: 1,
+      totalPages: 1,
+      totalItems: 0,
+      itemsPerPage: 20,
+      hasNextPage: false,
+      hasPrevPage: false,
+    },
+  } as ProductsApi.Types.IProducts.IProductResponse,
+  priceRange: {
+    min: 1,
+    max: 1000,
+    current: [1, 1000],
+  },
 };
 
 const initCart = async () => {
@@ -105,8 +120,11 @@ const UISlice = createSlice({
       state,
       action: PayloadAction<ProductsApi.Types.IProducts.IItems[] | any[]>
     ) => {
-      if(action.payload.length === 0) {
-        state.cart = [] as (ProductsApi.Types.IProducts.IItems & { count?: number; originalPrice: number; })[];
+      if (action.payload.length === 0) {
+        state.cart = [] as (ProductsApi.Types.IProducts.IItems & {
+          count?: number;
+          originalPrice: number;
+        })[];
         state.productsCountInCart = 0;
         return;
       }
@@ -130,7 +148,30 @@ const UISlice = createSlice({
       state,
       action: PayloadAction<UI.Appearance["searchProducts"]>
     ) => {
+      console.log(
+        "setSearchProducts reducer - results length:",
+        action.payload.results?.length
+      );
       state.searchProducts = action.payload;
+    },
+    setPriceRange: (
+      state,
+      action: PayloadAction<{ min: number; max: number }>
+    ) => {
+      state.priceRange.min = action.payload.min;
+      state.priceRange.max = action.payload.max;
+      // Reset current range to new bounds
+      state.priceRange.current = [action.payload.min, action.payload.max];
+    },
+    setPriceRangeCurrent: (state, action: PayloadAction<[number, number]>) => {
+      state.priceRange.current = action.payload;
+    },
+    resetPriceRange: (state) => {
+      state.priceRange = {
+        min: 1,
+        max: 1000,
+        current: [1, 1000],
+      };
     },
   },
 });
@@ -144,5 +185,8 @@ export const {
   setSearchData,
   setRecs,
   setSearchProducts,
+  setPriceRange,
+  setPriceRangeCurrent,
+  resetPriceRange,
 } = UISlice.actions;
 export default UISlice.reducer;

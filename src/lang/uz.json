@@ -1,5 +1,149 @@
 {
   "banner_1_sub_title": "Yangi tovarlar",
   "banner_1_title": "Zavod tomonidan ishlab chiqarilgan tormoz sistemalari",
-  "more": "Batafsil"
+  "more": "Batafsil",
+  "header": {
+    "phone": "+998 99 999 99 99",
+    "address": "Toshkent shahar, Chilonzor tumani, Furqat ko'chasi",
+    "schedule": "Dushanba - Shanba 7:00 - 20:00",
+    "languages": {
+      "uz": "O'zbek",
+      "ru": "Русский",
+      "en": "English"
+    }
+  },
+  "navigation": {
+    "home": "Bosh sahifa",
+    "products": "Mahsulotlar",
+    "cart": "Savat",
+    "about": "Biz haqimizda",
+    "contact": "Aloqa"
+  },
+  "search": {
+    "placeholder": "Mahsulotlarni qidiring...",
+    "results_found": "{count} ta mahsulot topildi",
+    "total_found": "Umumiy {count} ta mahsulot topildi",
+    "no_results": "Hech narsa topilmadi",
+    "view_more": "Ko'proq ko'rish",
+    "loading": "Qidirilmoqda..."
+  },
+  "filters": {
+    "title": "Filtrlar",
+    "producers": "Ishlab chiqaruvchilar",
+    "brands": "Brendlar",
+    "models": "Modellar",
+    "price": "Narx",
+    "price_range": "Narx oralig'i",
+    "position": "Joylashuvi",
+    "color": "Rang",
+    "reset": "Tozalash",
+    "apply": "Qo'llash",
+    "price_for": "Narx:",
+    "positions": {
+      "front": "Oldi",
+      "rear": "Orqa",
+      "front_left": "Oldi chap",
+      "front_right": "Oldi o'ng",
+      "rear_left": "Orqa chap",
+      "rear_right": "Orqa o'ng"
+    }
+  },
+  "products": {
+    "loading": "Mahsulotlar yuklanmoqda...",
+    "no_products": "Mahsulotlar topilmadi",
+    "add_to_cart": "Savatga",
+    "in_stock": "Mavjud",
+    "out_of_stock": "Tugagan",
+    "more_than_10": "10 tadan ko'p",
+    "price": "Narx",
+    "brand": "Brend",
+    "model": "Model",
+    "position": "Joylashuvi",
+    "description": "Tavsif",
+    "specifications": "Xususiyatlar",
+    "id": "ID"
+  },
+  "cart": {
+    "title": "Savat",
+    "empty_message": "sahifasiga qaytib o'zingizga kerakli mahsulotlarni qo'shing",
+    "total": "Jami",
+    "items_count": "{count} ta mahsulot",
+    "checkout": "Rasmiylashtirish",
+    "continue_shopping": "Xaridni davom ettirish",
+    "remove": "O'chirish",
+    "quantity": "Miqdor",
+    "item_total": "Summa",
+    "order_success": "Buyurtmangiz rasmiylashtirildi",
+    "processing": "Rasmiylashtirilmoqda...",
+    "checkout_form": {
+      "customer_name": "Haridor ism-sharifi",
+      "customer_name_placeholder": "Ism familiyangizni kiriting",
+      "phone": "Telefon raqam",
+      "phone_placeholder": "Telefon raqamingizni kiriting",
+      "telegram": "Telegram/WhatsApp username",
+      "telegram_placeholder": "Telegram/WhatsApp usernameingizni kiriting",
+      "address": "Manzil",
+      "address_placeholder": "Manzilingizni kiriting"
+    }
+  },
+  "pagination": {
+    "previous": "Oldingi",
+    "next": "Keyingi",
+    "page": "Sahifa",
+    "of": "dan",
+    "showing": "Ko'rsatilmoqda",
+    "to": "dan",
+    "results": "natija"
+  },
+  "footer": {
+    "follow_us": "Bizni kuzatib qoling:",
+    "contact_info": "Aloqa ma'lumotlari",
+    "working_hours": "Ish vaqti",
+    "address": "Manzil",
+    "about_text": "Biz avtomobil ehtiyot qismlari sohasida yetakchi kompaniyamiz. Sifatli mahsulotlar va professional xizmat ko'rsatishni kafolatlaymiz."
+  },
+  "common": {
+    "loading": "Yuklanmoqda...",
+    "error": "Xatolik yuz berdi",
+    "try_again": "Qayta urinib ko'ring",
+    "cancel": "Bekor qilish",
+    "confirm": "Tasdiqlash",
+    "save": "Saqlash",
+    "edit": "Tahrirlash",
+    "delete": "O'chirish",
+    "close": "Yopish",
+    "open": "Ochish",
+    "yes": "Ha",
+    "no": "Yo'q",
+    "all": "Barchasi",
+    "none": "Hech biri",
+    "select": "Tanlash",
+    "search": "Qidiruv",
+    "filter": "Filtr",
+    "sort": "Saralash",
+    "view": "Ko'rish",
+    "download": "Yuklab olish",
+    "upload": "Yuklash",
+    "submit": "Yuborish",
+    "reset": "Qayta tiklash",
+    "clear": "Tozalash",
+    "refresh": "Yangilash"
+  },
+  "validation": {
+    "required": "Bu maydon to'ldirilishi shart",
+    "email": "Email manzil noto'g'ri",
+    "phone": "Telefon raqam noto'g'ri",
+    "min_length": "Kamida {min} ta belgi bo'lishi kerak",
+    "max_length": "Ko'pi bilan {max} ta belgi bo'lishi kerak",
+    "numeric": "Faqat raqamlar kiritilishi kerak"
+  },
+  "categories": {
+    "brake": "Tormoz sistemasi",
+    "oil": "Moy",
+    "lights": "Yoritish",
+    "exhaust": "Egzoz sistemasi",
+    "filter": "Filtr",
+    "stereo": "Audio sistema",
+    "damper": "Amortizator"
+  }
 }

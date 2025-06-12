@@ -1,0 +1,149 @@
+{
+  "banner_1_sub_title": "Новые товары",
+  "banner_1_title": "Тормозные системы заводского производства",
+  "more": "Подробнее",
+  "header": {
+    "phone": "+998 99 999 99 99",
+    "address": "г. Ташкент, Чиланзарский район, ул. Фуркат",
+    "schedule": "Понедельник - Суббота 7:00 - 20:00",
+    "languages": {
+      "uz": "Узбекский",
+      "ru": "Русский",
+      "en": "English"
+    }
+  },
+  "navigation": {
+    "home": "Главная",
+    "products": "Товары",
+    "cart": "Корзина",
+    "about": "О нас",
+    "contact": "Контакты"
+  },
+  "search": {
+    "placeholder": "Поиск товаров...",
+    "results_found": "Найдено {count} товаров",
+    "total_found": "Всего найдено {count} товаров",
+    "no_results": "Ничего не найдено",
+    "view_more": "Посмотреть еще",
+    "loading": "Поиск..."
+  },
+  "filters": {
+    "title": "Фильтры",
+    "producers": "Производители",
+    "brands": "Бренды",
+    "models": "Модели",
+    "price": "Цена",
+    "price_range": "Диапазон цен",
+    "position": "Расположение",
+    "color": "Цвет",
+    "reset": "Очистить",
+    "apply": "Применить",
+    "price_for": "Цена для:",
+    "positions": {
+      "front": "Передние",
+      "rear": "Задние",
+      "front_left": "П. левый",
+      "front_right": "П. правый",
+      "rear_left": "З. левый",
+      "rear_right": "З. правый"
+    }
+  },
+  "products": {
+    "loading": "Загрузка товаров...",
+    "no_products": "Товары не найдены",
+    "add_to_cart": "В корзину",
+    "in_stock": "В наличии",
+    "out_of_stock": "Нет в наличии",
+    "more_than_10": "Более 10 шт",
+    "price": "Цена",
+    "brand": "Бренд",
+    "model": "Модель",
+    "position": "Расположение",
+    "description": "Описание",
+    "specifications": "Характеристики",
+    "id": "ID"
+  },
+  "cart": {
+    "title": "Корзина",
+    "empty_message": "Вернитесь на страницу товаров и добавьте нужные вам товары",
+    "total": "Итого",
+    "items_count": "{count} товаров",
+    "checkout": "Оформить заказ",
+    "continue_shopping": "Продолжить покупки",
+    "remove": "Удалить",
+    "quantity": "Количество",
+    "item_total": "Сумма",
+    "order_success": "Ваш заказ оформлен",
+    "processing": "Обработка...",
+    "checkout_form": {
+      "customer_name": "ФИО покупателя",
+      "customer_name_placeholder": "Введите ваше имя и фамилию",
+      "phone": "Номер телефона",
+      "phone_placeholder": "Введите ваш номер телефона",
+      "telegram": "Telegram/WhatsApp username",
+      "telegram_placeholder": "Введите ваш Telegram/WhatsApp username",
+      "address": "Адрес",
+      "address_placeholder": "Введите ваш адрес"
+    }
+  },
+  "pagination": {
+    "previous": "Предыдущая",
+    "next": "Следующая",
+    "page": "Страница",
+    "of": "из",
+    "showing": "Показано",
+    "to": "до",
+    "results": "результатов"
+  },
+  "footer": {
+    "follow_us": "Следите за нами:",
+    "contact_info": "Контактная информация",
+    "working_hours": "Рабочие часы",
+    "address": "Адрес",
+    "about_text": "Мы - ведущая компания в сфере автомобильных запчастей. Гарантируем качественные товары и профессиональное обслуживание."
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Произошла ошибка",
+    "try_again": "Попробуйте снова",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "save": "Сохранить",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "close": "Закрыть",
+    "open": "Открыть",
+    "yes": "Да",
+    "no": "Нет",
+    "all": "Все",
+    "none": "Ничего",
+    "select": "Выбрать",
+    "search": "Поиск",
+    "filter": "Фильтр",
+    "sort": "Сортировка",
+    "view": "Просмотр",
+    "download": "Скачать",
+    "upload": "Загрузить",
+    "submit": "Отправить",
+    "reset": "Сбросить",
+    "clear": "Очистить",
+    "refresh": "Обновить"
+  },
+  "validation": {
+    "required": "Это поле обязательно для заполнения",
+    "email": "Неверный email адрес",
+    "phone": "Неверный номер телефона",
+    "min_length": "Минимум {min} символов",
+    "max_length": "Максимум {max} символов",
+    "numeric": "Только цифры"
+  },
+  "categories": {
+    "brake": "Тормозная система",
+    "oil": "Масло",
+    "lights": "Освещение",
+    "exhaust": "Выхлопная система",
+    "filter": "Фильтр",
+    "stereo": "Аудиосистема",
+    "damper": "Амортизатор"
+  }
+}

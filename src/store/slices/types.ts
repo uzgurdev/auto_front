@@ -15,5 +15,10 @@ export namespace UI {
     };
     recs: HomeApi.Types.IHome.Recs.IResponse["data"];
     searchProducts: ProductsApi.Types.IProducts.IProductResponse;
+    priceRange: {
+      min: number;
+      max: number;
+      current: [number, number];
+    };
   }
 }

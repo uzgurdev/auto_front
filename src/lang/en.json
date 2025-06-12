@@ -1,0 +1,149 @@
+{
+  "banner_1_sub_title": "New Products",
+  "banner_1_title": "Factory-manufactured brake systems",
+  "more": "Learn More",
+  "header": {
+    "phone": "+998 99 999 99 99",
+    "address": "Tashkent city, Chilanzar district, Furqat street",
+    "schedule": "Monday - Saturday 7:00 - 20:00",
+    "languages": {
+      "uz": "Uzbek",
+      "ru": "Russian",
+      "en": "English"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "products": "Products",
+    "cart": "Cart",
+    "about": "About Us",
+    "contact": "Contact"
+  },
+  "search": {
+    "placeholder": "Search products...",
+    "results_found": "Found {count} products",
+    "total_found": "Total {count} products found",
+    "no_results": "Nothing found",
+    "view_more": "View More",
+    "loading": "Searching..."
+  },
+  "filters": {
+    "title": "Filters",
+    "producers": "Producers",
+    "brands": "Brands",
+    "models": "Models",
+    "price": "Price",
+    "price_range": "Price Range",
+    "position": "Position",
+    "color": "Color",
+    "reset": "Clear",
+    "apply": "Apply",
+    "price_for": "Price for:",
+    "positions": {
+      "front": "Front",
+      "rear": "Rear",
+      "front_left": "Front Left",
+      "front_right": "Front Right",
+      "rear_left": "Rear Left",
+      "rear_right": "Rear Right"
+    }
+  },
+  "products": {
+    "loading": "Loading products...",
+    "no_products": "No products found",
+    "add_to_cart": "Add to Cart",
+    "in_stock": "In Stock",
+    "out_of_stock": "Out of Stock",
+    "more_than_10": "More than 10",
+    "price": "Price",
+    "brand": "Brand",
+    "model": "Model",
+    "position": "Position",
+    "description": "Description",
+    "specifications": "Specifications",
+    "id": "ID"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty_message": "Go back to products page and add the items you need",
+    "total": "Total",
+    "items_count": "{count} items",
+    "checkout": "Checkout",
+    "continue_shopping": "Continue Shopping",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "item_total": "Subtotal",
+    "order_success": "Your order has been placed",
+    "processing": "Processing...",
+    "checkout_form": {
+      "customer_name": "Customer Name",
+      "customer_name_placeholder": "Enter your full name",
+      "phone": "Phone Number",
+      "phone_placeholder": "Enter your phone number",
+      "telegram": "Telegram/WhatsApp username",
+      "telegram_placeholder": "Enter your Telegram/WhatsApp username",
+      "address": "Address",
+      "address_placeholder": "Enter your address"
+    }
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "showing": "Showing",
+    "to": "to",
+    "results": "results"
+  },
+  "footer": {
+    "follow_us": "Follow us:",
+    "contact_info": "Contact Information",
+    "working_hours": "Working Hours",
+    "address": "Address",
+    "about_text": "We are a leading company in the automotive parts industry. We guarantee quality products and professional service."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "try_again": "Try again",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "select": "Select",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "view": "View",
+    "download": "Download",
+    "upload": "Upload",
+    "submit": "Submit",
+    "reset": "Reset",
+    "clear": "Clear",
+    "refresh": "Refresh"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email address",
+    "phone": "Invalid phone number",
+    "min_length": "Minimum {min} characters required",
+    "max_length": "Maximum {max} characters allowed",
+    "numeric": "Only numbers allowed"
+  },
+  "categories": {
+    "brake": "Brake System",
+    "oil": "Oil",
+    "lights": "Lighting",
+    "exhaust": "Exhaust System",
+    "filter": "Filter",
+    "stereo": "Audio System",
+    "damper": "Shock Absorber"
+  }
+}

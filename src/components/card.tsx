@@ -101,7 +101,7 @@ const Card: FC<Partial<Product>> = (Product) => {
           className="font-[500] text-text-primary"
           dangerouslySetInnerHTML={{ __html: Product.name as string }}
         />
-        <p className="font-[500] my-[10px]">${Product?.price}</p>
+        <p className="font-[500] my-[10px]">{Product?.price}</p>
         <button
           onClick={handleClick}
           className="w-full py-2 px-4 bg-bg-secondary text-text-secondary font-semibold rounded-lg transition-colors duration-200 hover:bg-bg-tertiary focus:outline-none focus:ring-text-muted outline-none"

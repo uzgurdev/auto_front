@@ -14,8 +14,10 @@ import { CartApi } from "modules";
 import { StorageManager } from "utils";
 
 export default function CartPage() {
-  const { languages, cart } = useSelector((state: RootState) => state.ui);  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSubmitted] = useState(true);  const [{ isSubmitting }, setState] = useState({
+  const { languages, cart } = useSelector((state: RootState) => state.ui);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitted] = useState(true);
+  const [{ isSubmitting }, setState] = useState({
     isSubmitting: false,
   });
 
@@ -48,11 +50,12 @@ export default function CartPage() {
       icon: "icon-location",
       type: "text",
     },
-  ]);  useEffect(() => {
+  ]);
+  useEffect(() => {
     const fetchCartItems = async () => {
       try {
         const response = await CartApi.CartApi.cart();
-        console.log('Cart data:', response.data);
+        console.log("Cart data:", response.data);
         // Store.dispatch(UIActions.setCart(response.data));
       } catch (error) {
         console.error("Error fetching cart data:", error);
@@ -255,8 +258,9 @@ export default function CartPage() {
                     />
                   </div>
                 </div>
-              ))}              <button 
-                className="submit mt-5 w-full bg-primary text-bg-primary h-[50px] rounded-full text-sm outline-none disabled:opacity-50" 
+              ))}{" "}
+              <button
+                className="submit mt-5 w-full bg-primary text-bg-primary h-[50px] rounded-full text-sm outline-none disabled:opacity-50"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Rasmiylashtirilmoqda..." : "Rasmiylashtirish"}
