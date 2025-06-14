@@ -9,6 +9,8 @@ import Comments from "./comments";
 import DiscountSection from "./discountSection";
 import axios from "axios";
 import { HomeApi } from "modules";
+import { Store } from "store";
+import { UIActions } from "store/slices";
 import RecommendationSec from "./recs";
 
 const Home = () => {
@@ -29,16 +31,22 @@ const Home = () => {
   const handleDot = (idx: number) => {
     setCurrentIndex(idx);
   };
-
   useEffect(() => {
     const fetchProducts = async () => {
-      if (data !== null) return;
       setIsLoading(true);
 
       try {
-        const { data } = await HomeApi.Api.Home();
+        // Fetch home data and recommendations in parallel
+        const [homeResponse, recsResponse] = await Promise.all([
+          HomeApi.Api.Home(),
+          HomeApi.Api.Recs(),
+        ]);
 
-        setData(data.data);
+        setData(homeResponse.data.data);
+
+        // Populate Redux store with recommendations data so other components can use it
+        Store.dispatch(UIActions.setRecs(recsResponse.data.data));
+
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
@@ -46,8 +54,10 @@ const Home = () => {
       }
     };
 
-    fetchProducts();
-  }, []);
+    if (!data) {
+      fetchProducts();
+    }
+  }, [data]);
 
   useEffect(() => {
     if (isPaused) return; // Don't start interval if paused

@@ -1,6 +1,10 @@
 {
   "banner_1_sub_title": "Новые товары",
   "banner_1_title": "Тормозные системы заводского производства",
+  "banner_2_sub_title": "Высокое качество",
+  "banner_2_title": "Автомобильные запчасти и аксессуары",
+  "banner_3_sub_title": "Лучшие цены",
+  "banner_3_title": "Профессиональное обслуживание и консультации",
   "more": "Подробнее",
   "header": {
     "phone": "+998 99 999 99 99",
@@ -25,7 +29,15 @@
     "total_found": "Всего найдено {count} товаров",
     "no_results": "Ничего не найдено",
     "view_more": "Посмотреть еще",
-    "loading": "Поиск..."
+    "loading": "Поиск...",
+    "find_parts": "Найдите нужные автозапчасти",
+    "producer_label": "Производитель",
+    "producer_placeholder": "Производитель",
+    "car_brand_label": "Марка автомобиля",
+    "car_brand_placeholder": "Выберите марку автомобиля",
+    "car_model_label": "Модель автомобиля",
+    "car_model_placeholder": "Модель автомобиля",
+    "search_button": "Поиск"
   },
   "filters": {
     "title": "Фильтры",

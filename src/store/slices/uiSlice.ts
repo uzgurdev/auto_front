@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UI } from "./types";
 import { HomeApi, ProductsApi } from "modules";
-import { StorageManager } from "utils";
 
 const initialState: UI.Appearance = {
   languages: "ru",
@@ -37,32 +36,6 @@ const initialState: UI.Appearance = {
     current: [1, 1000],
   },
 };
-
-const initCart = async () => {
-  const cart = StorageManager.get("cart");
-  if (!cart?.length) return;
-
-  try {
-    const promises = cart.map((item) => ProductsApi.Api.addToCart(item));
-    const responses = await Promise.all(promises);
-
-    console.log({ promises, responses });
-
-    const newCart = responses
-      .filter((response) => response.data)
-      .map((response) => response.data.data.items)
-      .flat();
-
-    if (newCart.length) {
-      initialState.cart = newCart;
-      initialState.productsCountInCart = newCart.length;
-    }
-  } catch (error) {
-    console.error("Failed to initialize cart:", error);
-  }
-};
-
-// initCart();
 
 const UISlice = createSlice({
   name: "UI",
@@ -130,7 +103,8 @@ const UISlice = createSlice({
       }
       const cart = action.payload.map((item) => ({
         ...item,
-        originalPrice: item.price / item.quantity,
+        count: item.count || item.quantity || 1, // Handle both count and quantity
+        originalPrice: item.originalPrice || item.price,
       }));
       state.cart = cart;
       state.productsCountInCart = cart.length;

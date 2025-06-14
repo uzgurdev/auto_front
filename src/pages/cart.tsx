@@ -1,64 +1,102 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Minus, Plus } from "lucide-react";
+import { Link } from "react-router";
+import { useSelector } from "react-redux";
+import { useTranslation } from "../lang";
 
 import CART from "../assets/images/cart.png";
 import { Icon, Modal } from "components";
-
-import "../assets/styles/animations.css";
-import { Link } from "react-router";
-import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import { Store } from "store";
 import { UIActions } from "store/slices";
 import { CartApi } from "modules";
 import { StorageManager } from "utils";
 
+import "../assets/styles/animations.css";
+
 export default function CartPage() {
   const { languages, cart } = useSelector((state: RootState) => state.ui);
+  const { t } = useTranslation(languages);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSubmitted] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [{ isSubmitting }, setState] = useState({
     isSubmitting: false,
   });
+  const [removingItems, setRemovingItems] = useState<string[]>([]);
 
   const inputs = useRef([
     {
-      label: "Haridor ism-sharifi",
+      label: t("cart.checkout_form.customer_name"),
       name: "name",
-      placeholder: "Ism familiyangizni kiriting",
+      placeholder: t("cart.checkout_form.customer_name_placeholder"),
       icon: "icon-person",
       type: "text",
     },
     {
-      label: "Telefon raqam",
+      label: t("cart.checkout_form.phone"),
       name: "phone",
-      placeholder: "Telefon raqamingizni kiriting",
+      placeholder: t("cart.checkout_form.phone_placeholder"),
       icon: "icon-phone-outline",
       type: "tel",
     },
     {
-      label: "Telegram/WhatsApp username",
+      label: t("cart.checkout_form.telegram"),
       name: "telegramUsername",
-      placeholder: "Telegram/WhatsApp usernameingizni kiriting",
+      placeholder: t("cart.checkout_form.telegram_placeholder"),
       icon: "icon-mail",
-      type: "email",
+      type: "text",
     },
     {
-      label: "Manzil",
+      label: t("cart.checkout_form.address"),
       name: "location",
-      placeholder: "Manzilingizni kiriting",
+      placeholder: t("cart.checkout_form.address_placeholder"),
       icon: "icon-location",
       type: "text",
     },
   ]);
+
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const response = await CartApi.CartApi.cart();
-        console.log("Cart data:", response.data);
-        // Store.dispatch(UIActions.setCart(response.data));
+        setIsLoading(true);
+        const { data } = await CartApi.CartApi.cart();
+        const cartData = data as any;
+
+        console.log({
+          cartData,
+          items: cartData.data.items,
+          isItemsArray: Array.isArray(cartData.data.items),
+        });
+
+        if (
+          !cartData ||
+          !cartData.data.items ||
+          !Array.isArray(cartData.data.items)
+        ) {
+          console.error("❌ Invalid cart data structure:", cartData);
+          return;
+        }
+
+        // Get current cart from Redux
+        const currentCart = Store.getState().ui.cart;
+
+        // Merge API data with local data
+        const cartItems = cartData.data.items.map((apiItem: any) => {
+          const localItem = currentCart.find(
+            (item) => item._id === apiItem._id
+          );
+          return {
+            ...apiItem,
+            count: localItem ? localItem.count : apiItem.quantity,
+          };
+        });
+
+        Store.dispatch(UIActions.setCart(cartItems));
       } catch (error) {
-        console.error("Error fetching cart data:", error);
+        console.error("💥 Error fetching cart data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchCartItems();
@@ -67,7 +105,7 @@ export default function CartPage() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log({ e, target: e.currentTarget });
-    if (!isSubmitted) return;
+    if (isSubmitted) return;
     try {
       setState((prev) => ({ ...prev, isSubmitting: true }));
       const formData = new FormData(e.currentTarget);
@@ -82,20 +120,67 @@ export default function CartPage() {
       console.error("Error submitting order:", error);
     } finally {
       setState((prev) => ({ ...prev, isSubmitting: false }));
+      setIsSubmitted(true);
     }
   };
 
-  const updateQuantity = (id: string, newQuantity: number) => {
-    Store.dispatch(
-      UIActions.setProductsCountInCart({ id, count: newQuantity })
+  const updateQuantity = async (id: string, newQuantity: number) => {
+    try {
+      if (newQuantity <= 0) {
+        await removeItem(id);
+        return;
+      }
+      const { data } = await CartApi.CartApi.UpdateCartItem({
+        quantity: newQuantity,
+        productId: id,
+      });
+
+      // Set the new cart items from API response
+      if (data?.data?.items && Array.isArray(data.data.items)) {
+        Store.dispatch(UIActions.setCart(data.data.items));
+      } else {
+        // Fallback: just remove the item if no items array returned
+        Store.dispatch(UIActions.setProductsCountInCart({ id, count: 0 }));
+      }
+    } catch (error) {
+      console.error("Error updating item quantity:", error);
+    }
+  };
+
+  const removeItem = async (id: string) => {
+    try {
+      setRemovingItems((prev) => [...prev, id]);
+      const { data } = await CartApi.CartApi.RemoveFromCart(id);
+
+      // Set the new cart items from API response
+      if (data?.data?.items && Array.isArray(data.data.items)) {
+        Store.dispatch(UIActions.setCart(data.data.items));
+      } else {
+        // Fallback: just remove the item if no items array returned
+        Store.dispatch(UIActions.setProductsCountInCart({ id, count: 0 }));
+      }
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+    } finally {
+      setRemovingItems((prev) => prev.filter((itemId) => itemId !== id));
+    }
+  };
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.count, 0);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 w-full">
+        <h1 className="mb-8 text-text-secondary text-[28px] font-[400]">
+          Savat
+        </h1>
+        <div className="flex items-center justify-center py-16">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <span className="ml-3 text-text-secondary">Yuklanmoqda...</span>
+        </div>
+      </div>
     );
-  };
-
-  const removeItem = (id: string) => {
-    Store.dispatch(UIActions.setProductsCountInCart({ id, count: 0 }));
-  };
-
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 w-full">
@@ -135,7 +220,7 @@ export default function CartPage() {
                               {item.name}
                             </p>
                             <p className="text-lg font-medium text-text-secondary opacity-70">
-                              {item.name}
+                              {item.carPartIds.join(", ")}
                             </p>
                           </div>
                         </div>
@@ -144,7 +229,7 @@ export default function CartPage() {
                         <div className="flex items-center justify-end font-Poppins text-[24px]">
                           <button
                             onClick={() =>
-                              updateQuantity(item._id, item.count - 1)
+                              updateQuantity(item.productId, item.count - 1)
                             }
                             className="bg-bg-secondary w-7 h-7 flex items-center justify-center rounded-[5px]"
                           >
@@ -158,7 +243,7 @@ export default function CartPage() {
                           </span>
                           <button
                             onClick={() =>
-                              updateQuantity(item._id, item.count + 1)
+                              updateQuantity(item.productId, item.count + 1)
                             }
                             className="bg-bg-secondary w-7 h-7 flex items-center justify-center rounded-[5px]"
                           >
@@ -176,7 +261,7 @@ export default function CartPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
-                          onClick={() => removeItem(item._id)}
+                          onClick={() => updateQuantity(item.productId, 0)}
                           className="text-red-600 hover:text-red-900"
                         >
                           <Icon.Icon
@@ -217,19 +302,19 @@ export default function CartPage() {
 
       {isModalOpen && (
         <Modal.Modal
-          classes={!isSubmitted ? "grid place-items-center" : ""}
+          classes={isSubmitted ? "grid place-items-center" : ""}
           onClose={() => setIsModalOpen(!isModalOpen)}
         >
           <p
             className={`modal font-Poppins font-normal text-2xl ${
-              !isSubmitted && "text-center"
+              isSubmitted && "text-center"
             }`}
           >
-            {!isSubmitted
+            {isSubmitted
               ? "Buyurtmangiz rasmiylashtirildi"
               : "Rasmiylashtirish"}
           </p>
-          {isSubmitted ? (
+          {!isSubmitted ? (
             <form
               action="submit"
               className="font-Poppins font-normal mt-5"
@@ -294,7 +379,7 @@ export default function CartPage() {
             </div>
           )}
 
-          {!isSubmitted && (
+          {isSubmitted && (
             <Link
               to={`/${languages}/products`}
               className="underline text-text-muted block"

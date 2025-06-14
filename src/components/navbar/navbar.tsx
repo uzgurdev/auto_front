@@ -2,6 +2,7 @@ import { memo, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useTranslation } from "../../lang";
 
 import { Store } from "store";
 import { UIActions } from "store/slices";
@@ -17,6 +18,7 @@ const Navbar = () => {
   const { languages, productsCountInCart } = useSelector(
     (state: RootState) => state.ui
   );
+  const { t } = useTranslation(languages);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
 
@@ -61,8 +63,7 @@ const Navbar = () => {
                       isLangOpen ? "rotate-180" : ""
                     }`}
                   />
-                </button>
-
+                </button>{" "}
                 {isLangOpen && (
                   <div className="lang_drop-down absolute top-full mt-2 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
                     {["uz", "ru", "en"].map((lang) => (
@@ -80,7 +81,7 @@ const Navbar = () => {
                           );
                         }}
                       >
-                        {lang.toUpperCase()}
+                        {t(`header.languages.${lang}` as any)}
                       </Link>
                     ))}
                   </div>

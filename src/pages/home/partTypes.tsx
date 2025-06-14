@@ -14,7 +14,7 @@ const PartTypes = () => {
   return (
     <div className="w-full my-[100px] text-center font-[400] text-[32px]">
       Eng sara avtomobil ehtiyot qisimlari turlari
-      <div className="flex flex-wrap items-center justify-between gap-8 mt-[50px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mt-[50px]">
         {recs.mostOrdered?.map((item) => (
           <TypeCard
             key={item._id}

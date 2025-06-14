@@ -37,6 +37,7 @@ export namespace IProducts {
     image: string;
     price: number;
     quantity: number;
+    carPartIds: string[]; // IDs of car parts associated with the product
     // inStock: number; // Commented out to disable stock functionality
   }
 

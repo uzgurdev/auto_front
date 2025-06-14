@@ -9,6 +9,7 @@ interface CarouselProps {
   currentCategory: string; // Add currentCategory prop
   onOpenModal?: (id: string) => void;
   onCart?: (id: string) => void;
+  loadingCartItems?: Set<string>; // Add loading state prop
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -17,6 +18,7 @@ const Carousel: React.FC<CarouselProps> = ({
   currentCategory,
   onOpenModal,
   onCart,
+  loadingCartItems,
 }) => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -89,6 +91,8 @@ const Carousel: React.FC<CarouselProps> = ({
           <div key={product.productId} className="flex-shrink-0">
             <Card
               {...product}
+              _id={product.productId} // Map productId to _id for Card component compatibility
+              isCartLoading={loadingCartItems?.has(product.productId)} // Pass loading state
               onCart={onCart ? () => onCart(product.productId) : () => {}}
               onClick={
                 onOpenModal ? () => onOpenModal(product.productId) : () => {}

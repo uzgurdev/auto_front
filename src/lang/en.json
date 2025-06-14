@@ -1,6 +1,10 @@
 {
   "banner_1_sub_title": "New Products",
   "banner_1_title": "Factory-manufactured brake systems",
+  "banner_2_sub_title": "High Quality",
+  "banner_2_title": "Auto parts and accessories",
+  "banner_3_sub_title": "Best Prices",
+  "banner_3_title": "Professional service and consultation",
   "more": "Learn More",
   "header": {
     "phone": "+998 99 999 99 99",
@@ -25,7 +29,15 @@
     "total_found": "Total {count} products found",
     "no_results": "Nothing found",
     "view_more": "View More",
-    "loading": "Searching..."
+    "loading": "Searching...",
+    "find_parts": "Find the auto parts you need",
+    "producer_label": "Manufacturer",
+    "producer_placeholder": "Manufacturer",
+    "car_brand_label": "Car Brand",
+    "car_brand_placeholder": "Select car brand",
+    "car_model_label": "Car Model",
+    "car_model_placeholder": "Car model",
+    "search_button": "Search"
   },
   "filters": {
     "title": "Filters",

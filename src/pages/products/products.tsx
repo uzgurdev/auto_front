@@ -21,11 +21,13 @@ const Products = () => {
   const carBrand = searchParams.get("carBrand");
   const carModel = searchParams.get("carModel");
   const position = searchParams.get("position");
-  const [{ currentPage, isModalOpen, isLoading }, setState] = useState({
-    currentPage: 1, // Start with page 1, will be updated by Redux state
-    isModalOpen: null as null | ProductsApi.Types.IProducts.IProduct,
-    isLoading: false,
-  });
+  const [{ currentPage, isModalOpen, isLoading, loadingCartItems }, setState] =
+    useState({
+      currentPage: 1, // Start with page 1, will be updated by Redux state
+      isModalOpen: null as null | ProductsApi.Types.IProducts.IProduct,
+      isLoading: false,
+      loadingCartItems: new Set<string>(), // Track which items are loading
+    });
   // Get the current page from Redux state with proper null safety
   const reduxCurrentPage =
     searchProducts?.pagination?.currentPage ??
@@ -218,20 +220,50 @@ const Products = () => {
       }));
     }
   };
-
   const handleCart = async (id: string) => {
-    const { data } = await ProductsApi.Api.addToCart(id);
-    const cartIds = StorageManager.get("cart") || [];
-    const newCartIds = [...cartIds, id];
+    // Add item to loading state
+    setState((prev) => {
+      const newLoadingItems = new Set(prev.loadingCartItems);
+      newLoadingItems.add(id);
+      return {
+        ...prev,
+        loadingCartItems: newLoadingItems,
+      };
+    });
 
-    if (!isEmpty(data.data) && data.data.items.length > 0) {
-      data.data.items.forEach((item) => {
-        Store.dispatch(
-          UIActions.addToCart({ ...item, count: 1, originalPrice: item.price })
-        );
+    try {
+      const { data } = await ProductsApi.Api.addToCart(id);
+      const cartIds = StorageManager.get("cart") || [];
+      const newCartIds = [...cartIds, id];
+
+      if (!isEmpty(data.data) && data.data.items.length > 0) {
+        // Use setCart to replace the entire cart with the API response
+        // This prevents incrementing existing items when adding new ones
+        Store.dispatch(UIActions.setCart(data.data.items));
+      }
+      StorageManager.set("cart", newCartIds);
+
+      // Remove item from loading state on success
+      setState((prev) => {
+        const newLoadingItems = new Set(prev.loadingCartItems);
+        newLoadingItems.delete(id);
+        return {
+          ...prev,
+          loadingCartItems: newLoadingItems,
+        };
+      });
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      // Remove item from loading state on error
+      setState((prev) => {
+        const newLoadingItems = new Set(prev.loadingCartItems);
+        newLoadingItems.delete(id);
+        return {
+          ...prev,
+          loadingCartItems: newLoadingItems,
+        };
       });
     }
-    StorageManager.set("cart", newCartIds);
   };
 
   const handleProductCountInCart = (count: number) => {
@@ -266,11 +298,13 @@ const Products = () => {
           </div>
         ) : (
           <>
+            {" "}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {(searchProducts.results ?? searchData.results).map((product) => (
                 <Card
                   key={product._id}
                   {...product}
+                  isCartLoading={loadingCartItems.has(product._id)} // Pass loading state
                   onClick={handleOpenModal}
                   onCart={handleCart}
                 />
@@ -428,7 +462,7 @@ const Products = () => {
                     <p className="text-text-secondary font-Poppins font-medium text-lg">
                       ID:{" "}
                       <span className="text-text-muted">
-                        {isModalOpen.carPartIds}
+                        {isModalOpen.carPartIds?.join(", ")}
                       </span>
                     </p>
                     <p className="text-text-secondary font-Poppins font-medium text-lg">
@@ -490,19 +524,32 @@ const Products = () => {
                           </button>
                         </div>
                       </div>
-                    )}
-
+                    )}{" "}
                   {singleProductCount.length === 0 && (
                     <button
-                      className="w-full h-[90px] bg-primary rounded-[10px] flex items-center justify-center gap-[10px] text-bg-primary"
+                      className={`w-full h-[90px] bg-primary rounded-[10px] flex items-center justify-center gap-[10px] text-bg-primary ${
+                        loadingCartItems.has(isModalOpen?._id || "")
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
                       onClick={() => handleCart(isModalOpen?._id)}
+                      disabled={loadingCartItems.has(isModalOpen?._id || "")}
                     >
                       <Icon.Icon
                         icon="icon-basket"
                         size="md"
                         color="var(--color-bg-primary)"
+                        iconClassName={
+                          loadingCartItems.has(isModalOpen?._id || "")
+                            ? "animate-pulse"
+                            : ""
+                        }
                       />
-                      <p className="text-2xl font-medium">Savatga</p>
+                      <p className="text-2xl font-medium">
+                        {loadingCartItems.has(isModalOpen?._id || "")
+                          ? "Qo'shilmoqda..."
+                          : "Savatga"}
+                      </p>
                     </button>
                   )}
                 </div>

@@ -42,6 +42,7 @@ export namespace IHome {
       images: string[];
       price: string;
       category: string;
+      carPartIds: string[];
     }
 
     export interface mostOrderedByCategory {

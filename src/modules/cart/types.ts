@@ -34,12 +34,28 @@ export namespace ICart {
 
   export interface IRemoveFromCartResponse {
     success: boolean;
-    message?: string;
+    data: {
+      _id: string;
+      sessionId: string;
+      items: ICartItem[];
+      total: number;
+      currency: string;
+      expiresAt: string;
+      lastModified: string;
+      createdAt: string;
+      updatedAt: string;
+    };
   }
 
   export interface IUpdateCartItemResponse {
     success: boolean;
-    item?: ICartItem;
+    data: {
+      _id: string;
+      sessionId: string;
+      items: ICartItem[];
+      total: number;
+      currency: string;
+    };
   }
 
   export interface IGetCartResponse {

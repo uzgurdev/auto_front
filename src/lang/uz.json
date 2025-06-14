@@ -1,6 +1,10 @@
 {
   "banner_1_sub_title": "Yangi tovarlar",
   "banner_1_title": "Zavod tomonidan ishlab chiqarilgan tormoz sistemalari",
+  "banner_2_sub_title": "Yuqori sifat",
+  "banner_2_title": "Avtomobil ehtiyot qismlari va aksessuarlar",
+  "banner_3_sub_title": "Eng yaxshi narxlar",
+  "banner_3_title": "Professional xizmat va maslahat",
   "more": "Batafsil",
   "header": {
     "phone": "+998 99 999 99 99",
@@ -25,7 +29,15 @@
     "total_found": "Umumiy {count} ta mahsulot topildi",
     "no_results": "Hech narsa topilmadi",
     "view_more": "Ko'proq ko'rish",
-    "loading": "Qidirilmoqda..."
+    "loading": "Qidirilmoqda...",
+    "find_parts": "O'zingizga kerakli transport ehtiyot qisimlarini toping",
+    "producer_label": "Ishlab chiqaruvchi kampaniya",
+    "producer_placeholder": "Ishlab chiqaruvchi kampaniya",
+    "car_brand_label": "Transport turi",
+    "car_brand_placeholder": "Transport turini tanlang",
+    "car_model_label": "Transport modeli",
+    "car_model_placeholder": "Transport modeli",
+    "search_button": "Qidirish"
   },
   "filters": {
     "title": "Filtrlar",

@@ -1,4 +1,7 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { useTranslation } from "../lang";
+import { RootState } from "../store/store";
 
 import LOGO from "../assets/images/footer_logo.png";
 import FACEBOOK from "../assets/images/Facebook.png";
@@ -12,6 +15,9 @@ import LOCATION_MARK from "../assets/images/location_mark.png";
 import CLOCK from "../assets/images/clock.png";
 
 const Footer = () => {
+  const { languages } = useSelector((state: RootState) => state.ui);
+  const { t } = useTranslation(languages);
+
   return (
     <div className="w-full bg-bg-secondary">
       <div className="container py-[65px] flex items-center justify-between">
@@ -19,14 +25,11 @@ const Footer = () => {
           <img src={LOGO} alt="footer logo" />
 
           <p className="font-[400] text-sm mt-6 mb-[43px] text-text-secondary opacity-50">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            {t("footer.about_text")}
           </p>
 
           <div className="socials flex items-center gap-[15px]">
-            <p className="text-text-secondary">Bizni kuzatib qoling:</p>
+            <p className="text-text-secondary">{t("footer.follow_us")}</p>
             <div className="logos flex items-center gap-[10px]">
               <img src={FACEBOOK} alt="facebook logo" />
               <img src={YOUTUBE} alt="youtube logo" />
@@ -39,7 +42,7 @@ const Footer = () => {
           <div className="contact flex items-center gap-[15px]">
             <img src={PHONE} alt="phone" />
             <span className="text-text-secondary opacity-50 font-[400] text-xs">
-              +7 702 505 00 07
+              {t("header.phone")}
             </span>
           </div>
           <div className="contact flex items-center gap-[15px]">
@@ -51,13 +54,13 @@ const Footer = () => {
           <div className="contact flex items-center gap-[15px]">
             <img src={LOCATION_MARK} alt="phone" />
             <span className="text-text-secondary opacity-50 font-[400] text-xs">
-              Toshkent shahar, Chilonzor tumani, Furqat ko’chasi
+              {t("header.address")}
             </span>
           </div>
           <div className="contact flex items-center gap-[15px]">
             <img src={CLOCK} alt="phone" />
             <span className="text-text-secondary opacity-50 font-[400] text-xs">
-              Dushanba - Shanba 7:00 - 20:00
+              {t("header.schedule")}
             </span>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useRef, useState } from "react";
 import { useOutsideClickHandler } from "hooks";
+import { useTranslation } from "../../lang";
 
 import { Card, Icon, Modal } from "components";
 import { Link, useNavigate } from "react-router";
@@ -8,6 +9,7 @@ import { UIActions } from "store/slices";
 import { ProductsApi } from "modules";
 
 const Search = ({ languages }: { languages: string }) => {
+  const { t } = useTranslation(languages as any);
   const navigate = useNavigate();
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [value, setValue] = useState("");
@@ -175,9 +177,11 @@ const Search = ({ languages }: { languages: string }) => {
       </div>{" "}
       {isSearchActive && results.length > 0 && (
         <div className="search_results w-[650px] h-[460px] absolute left-[37%] top-[90%] rounded-[20px] bg-bg-primary shadow-sm py-[10px] px-[15px]">
+          {" "}
           <div className="header w-full border-b-2 border-text-secondary p-[5px] text-text-secondary mb-[5px]">
-            Umumiy {data?.pagination?.totalItems || results.length} ta mahsulot
-            topildi
+            {t("search.total_found", {
+              count: data?.pagination?.totalItems || results.length,
+            })}
           </div>
           <div className="results w-full overflow-y-auto no-scrollbar flex items-center justify-start gap-[10px] mt-[15px]">
             {results.map(
@@ -194,7 +198,7 @@ const Search = ({ languages }: { languages: string }) => {
           </div>{" "}
           <div className="footer w-full grid place-items-center text-primary underline mt-5">
             <Link to={`/${languages}/products?q=${encodeURIComponent(value)}`}>
-              Ko'proq ko'rish
+              {t("search.view_more")}
             </Link>
           </div>
         </div>
