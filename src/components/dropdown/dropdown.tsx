@@ -93,6 +93,7 @@ const Dropdown: FC<DropdownI> = ({
         >
           {data.map((item: any) => (
             <div
+              key={item._id}
               className="option w-full px-3 py-2 cursor-pointer rounded-md hover:bg-bg-secondary text-text-secondary"
               onClick={() => handleClick(item.name, item._id)}
             >

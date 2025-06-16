@@ -57,7 +57,7 @@ const SearchSection = () => {
 
   useEffect(() => {
     const fetchBrands = async () => {
-      if (values.producer && isEmpty(data.brands)) {
+      if (values.producer) {
         try {
           console.log("Fetching brands for producer:", values.producer);
           const response = await HomeApi.Api.FilterBrands(values.producer);
@@ -77,26 +77,12 @@ const SearchSection = () => {
 
     if (values.producer) {
       fetchBrands();
-    } else {
-      setState((prev) => ({
-        ...prev,
-        data: {
-          ...prev.data,
-          brands: [],
-          models: [],
-        },
-        values: {
-          ...prev.values,
-          transport_brand: "",
-          transport_model: "",
-        },
-      }));
     }
-  }, [values.producer, data.brands]);
+  }, [values.producer]);
 
   useEffect(() => {
     const fetchModels = async () => {
-      if (values.transport_brand && isEmpty(data.models)) {
+      if (values.transport_brand) {
         try {
           console.log("Fetching models for brand:", values.transport_brand);
           const response = await HomeApi.Api.FilterModels(
@@ -119,29 +105,20 @@ const SearchSection = () => {
 
     if (values.transport_brand) {
       fetchModels();
-    } else {
-      setState((prev) => ({
-        ...prev,
-        data: {
-          ...prev.data,
-          models: [],
-        },
-        values: {
-          ...prev.values,
-          transport_model: "",
-        },
-      }));
     }
-  }, [values.transport_brand, values.producer, data.models]);
+  }, [values.transport_brand, values.producer]);
 
   const handleChange = (name: string, value: string) => {
+    console.log("Handling change for:", name, "with value:", value);
     setState((prev) => ({
       ...prev,
       values: {
         ...prev.values,
-        [name]: value,
+        [value]: name,
       },
     }));
+
+    console.log({ name, value });
 
     if (name === "producer") {
       setState((prev) => ({
