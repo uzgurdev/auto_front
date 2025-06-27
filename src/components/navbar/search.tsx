@@ -23,6 +23,7 @@ const Search = ({ languages }: { languages: string }) => {
   useOutsideClickHandler(wrapperRef, () => {
     setIsSearchActive(false);
   });
+
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const match = e.target.value.toLocaleLowerCase();
 
@@ -74,6 +75,7 @@ const Search = ({ languages }: { languages: string }) => {
   const handleClose = () => {
     setState((prev) => ({ ...prev, isModalOpen: null }));
   };
+
   const handleOpenModal = (id: string) => {
     const product = results.filter((p) => p._id === id)[0];
 
@@ -89,6 +91,7 @@ const Search = ({ languages }: { languages: string }) => {
       },
     }));
   };
+
   const handleCart = (id: string) => {
     const productIdx = results.findIndex((p) => p._id === id);
 
@@ -109,6 +112,7 @@ const Search = ({ languages }: { languages: string }) => {
       )
     );
   };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (results.length <= 0) {
@@ -133,12 +137,10 @@ const Search = ({ languages }: { languages: string }) => {
     }
   };
 
-  console.log({ results, data, isSearchActive });
-
   return (
     <div ref={wrapperRef}>
       <div
-        className={`searchbar w-[650px] h-[50px] rounded-[50px] outline-none relative ${
+        className={`searchbar w-[200px] md:w-[650px] h-[50px] rounded-[50px] outline-none relative ${
           !isSearchActive
             ? "bg-bg-secondary"
             : "bg-bg-primary border border-bg-secondary"
@@ -148,7 +150,7 @@ const Search = ({ languages }: { languages: string }) => {
         <input
           type="text"
           placeholder="Qidiruv..."
-          className="w-full h-full bg-transparent px-[30px] outline-none font-Poppins"
+          className="w-[300px] md:w-full h-full bg-transparent px-[30px] outline-none font-Poppins"
           onFocus={(e) => setIsSearchActive(true)}
           onChange={onChange}
           value={value}

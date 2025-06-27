@@ -10,14 +10,14 @@ interface IDiscountSectionProps {
 
 const DiscountSection: FC<IDiscountSectionProps> = ({ discount, expDate }) => {
   return (
-    <div className="w-full mb-[100px] flex items-center justify-between">
+    <div className="w-full mb-[100px] flex md:flex-row flex-col items-center justify-between">
       <img loading="lazy" src={LIGHTS} alt="lights" />
       <div className="context text-center">
-        <p className="title font-[500] text-[36px]">
+        <p className="title font-[500] text-[28px] md:text-[36px]">
           <span className="text-primary">{!discount ? 50 : discount}%</span>{" "}
-          chegirma <br /> ostida xarid qiling !
+          chegirma <br /> ostida xarid qiling!
         </p>
-        <p className="sub-title font-[400] text-sm">
+        <p className="sub-title font-[400] text-xs md:text-sm">
           $100 dan ortiq xarid qiling va {!discount ? 50 : discount}% chegirma
           yuting !
         </p>

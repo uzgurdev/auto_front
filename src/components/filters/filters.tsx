@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { Icon } from "components";
@@ -13,7 +13,11 @@ import { RootState } from "store/store";
 
 // const data: any[] = [{ name: "Porch" }, { name: "Mercedes" }];
 
-const Filters = () => {
+interface FiltersProps {
+  onClose?(): void;
+}
+
+const Filters: FC<FiltersProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const { languages } = useSelector((state: RootState) => state.ui);
 
@@ -205,6 +209,16 @@ const Filters = () => {
           size="sm"
           color="var(--color-text-muted)"
           radiusSize={0}
+          className="md:block hidden cursor-pointer"
+        />
+
+        <Icon.Icon
+          icon="icon-close"
+          size="lg"
+          className="md:hidden block bg-bg-primary"
+          color="var(--color-primary)"
+          iconSize="15px"
+          onClick={onClose}
         />
       </div>{" "}
       <div className="category py-7 px-5 grid gap-4 mt-0">

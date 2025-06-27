@@ -64,9 +64,8 @@ const Card: FC<Partial<Product>> = (Product) => {
 
   const isInCart = cartChecker();
   const isLoading = Product?.isCartLoading;
-
   return (
-    <div className="min-w-[250px] max-h-[360px] rounded-2xl shadow-sm">
+    <div className="min-w-[150px] md:min-w-[250px] max-h-[360px] rounded-2xl shadow-sm">
       <div className="relative rounded-[10px] mb-[10px]">
         <img
           src={

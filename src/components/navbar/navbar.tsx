@@ -24,7 +24,7 @@ const Navbar = () => {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[9999] bg-red shadow-xl h-[120px] w-full">
-      <div className="wrapper flex items-center pl-[108px] bg-bg-primary">
+      <div className="wrapper flex items-center pl-0 md:pl-[108px] bg-bg-primary">
         <Link
           to={`/${languages}`}
           className="flex items-center w-[120px] h-[92px]"
@@ -37,10 +37,11 @@ const Navbar = () => {
             className="h-120 w-auto"
           />
         </Link>
-        <div className="right-wrapper flex-col items-center w-full relative z-40">
+
+        <div className="right-wrapper flex-col items-center w-[70%] md:w-full relative z-40">
           <div className="absolute inset-0 h-10 bg-primary clip-path-diagonal -z-10"></div>
-          <div className="highlighted-top bg-transparent h-10 w-full shadow-none shadow-transparent flex items-center justify-end pr-[108px] font-Poppins font-[400] overflow-visible">
-            <div className="wrapper flex items-center gap-10 w-[265px] text-sm">
+          <div className="highlighted-top bg-transparent h-10 w-full shadow-none shadow-transparent flex items-center justify-end pr-0 md:pr-[108px] font-Poppins font-[400] overflow-visible">
+            <div className="wrapper flex items-center gap-10 md:w-[265px] text-sm">
               <div className="phone h-7 w-auto flex gap-[10px] items-center">
                 <Icon
                   icon="icon-phone"
@@ -48,8 +49,8 @@ const Navbar = () => {
                   iconSize="sm"
                   color="var(--color-text-primary-light)"
                 />
-                <a href="tel:+998999999999" className="text-white">
-                  +998 99 999 99 99
+                <a href="tel:+998977473707" className="text-white">
+                  +998 97 747 37 07
                 </a>
               </div>
               <div className="lang relative overflow-visible">
@@ -65,7 +66,7 @@ const Navbar = () => {
                   />
                 </button>{" "}
                 {isLangOpen && (
-                  <div className="lang_drop-down absolute top-full mt-2 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
+                  <div className="lang_drop-down absolute top-full sm:right-[200px] mt-2 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
                     {["uz", "ru", "en"].map((lang) => (
                       <Link
                         key={lang}
@@ -90,7 +91,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="bottom-wrapper h-20 pr-[108px] flex gap-5 items-center justify-end">
+          <div className="bottom-wrapper h-20 pr-0 md:pr-[108px] flex gap-2 md:gap-5 items-center justify-start md:justify-end">
             <Search {...{ languages }} />
 
             <div className="basket relative bg-bg-secondary hover:bg-bg-tertiary cursor-pointer h-10 w-10 rounded-full flex items-center justify-center">

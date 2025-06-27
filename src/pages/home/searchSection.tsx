@@ -200,11 +200,11 @@ const SearchSection = () => {
 
   return (
     <div className="w-full grid place-items-center gap-[50px] mt-[100px]">
-      <p className="top font-[500] text-[32px] text-center">
+      <p className="top font-[500] md:text-[32px] text-[24px] text-center">
         {t("search.find_parts")}
       </p>
-      <div className="bottom flex items-center justify-between w-full">
-        <div className="form w-1/2">
+      <div className="bottom flex flex-col lg:flex-row items-center justify-between w-full gap-8">
+        <div className="form w-full lg:w-1/2 order-2 lg:order-1">
           <form onSubmit={handleSubmit}>
             <Dropdown.Dropdown
               label={t("search.producer_label")}
@@ -234,14 +234,14 @@ const SearchSection = () => {
             />
             <button
               type="submit"
-              className="submit w-[500px] h-[50px] bg-primary text-bg-primary rounded-full"
+              className="submit w-full lg:w-[500px] h-[50px] bg-primary text-bg-primary rounded-full"
               disabled={values.transport_model === ""}
             >
               {t("search.search_button")}
             </button>
           </form>
         </div>
-        <div className="image w-1/2">
+        <div className="image w-full lg:w-1/2 order-1 lg:order-2">
           <img loading="lazy" src={SectionImage} alt="car parts" />
         </div>
       </div>

@@ -97,7 +97,7 @@ const Home = () => {
             ))}
           </div>
 
-          <div className="dots flex items-center justify-between gap-[13px] left-1/2 absolute bottom-[126px] w-max h-max z-20">
+          <div className="dots flex items-center justify-center gap-[13px] absolute bottom-[126px] left-1/2 transform -translate-x-1/2 w-max h-max z-20">
             {banners.map((_, index) => (
               <div
                 key={`dot-container-${index}`}

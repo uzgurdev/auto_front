@@ -171,7 +171,7 @@ export default function CartPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 w-full">
-        <h1 className="mb-8 text-text-secondary text-[28px] font-[400]">
+        <h1 className="mb-8 text-text-secondary text-[24px] md:text-[28px] font-[400]">
           Savat
         </h1>
         <div className="flex items-center justify-center py-16">
@@ -183,7 +183,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 w-full">
+    <div className="container mx-auto p-0 md:px-4 py-8 w-full">
       <h1 className="mb-8 text-text-secondary text-[28px] font-[400]">Savat</h1>
       {cart.length === 0 ? (
         <div className="text-center py-16 w-full">
@@ -197,10 +197,10 @@ export default function CartPage() {
         </div>
       ) : (
         // <div className="grid grid-cols-[800px_400px] gap-8">
-        <div className="grid  gap-8">
+        <div className="grid gap-8 w-[300px] md:w-full">
           <div className="">
             <div className="bg-white rounded-lg overflow-hidden">
-              <table className="w-full">
+              <table className="hidden md:block w-full">
                 <tbody className="divide-y divide-gray-200">
                   {cart.map((item) => (
                     <tr key={item._id}>
@@ -276,21 +276,111 @@ export default function CartPage() {
                   ))}
                 </tbody>
               </table>
+              <table className="md:hidden block w-full">
+                <tbody className="divide-y divide-gray-200">
+                  {cart.map((item) => (
+                    <tr key={item._id}>
+                      <td className=" py-4 whitespace-nowrap">
+                        <div className="flex items-start">
+                          <div className="flex-shrink-0 w-[100px] md:w-[150px] h-[100px] md:h-[150px]">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              // width={150}
+                              // height={150}
+                              className="rounded-[15px] overflow-hidden object-cover w-[100px] md:w-[150px] h-[100px] md:h-[150px]"
+                            />
+                          </div>
+                          <div className="ml-4 font-Poppins">
+                            <div className="context">
+                              <div className="texts">
+                                <div className="title_remove flex items-center justify-between">
+                                  <p className="text-base md:text-2xl font-[600] text-text-secondary">
+                                    {item.name}
+                                  </p>
+
+                                  <button
+                                    onClick={() =>
+                                      updateQuantity(item.productId, 0)
+                                    }
+                                    className="text-red-600 hover:text-red-900"
+                                  >
+                                    <Icon.Icon
+                                      icon="icon-bin"
+                                      size="sm"
+                                      iconSize="w-4 h-4"
+                                      color="var(--color-primary)"
+                                    />
+                                  </button>
+                                </div>
+                                <p className="text-xs md:text-lg font-medium text-text-secondary opacity-70">
+                                  {item.carPartIds.join(", ")}
+                                </p>
+                              </div>
+
+                              <div className="flex items-center gap-24">
+                                <div className="flex items-center justify-end font-Poppins text-base md:text-[24px]">
+                                  <button
+                                    onClick={() =>
+                                      updateQuantity(
+                                        item.productId,
+                                        item.count - 1
+                                      )
+                                    }
+                                    className="bg-bg-secondary w-[18px] md:w-7 h-[18px] md:h-7 flex items-center justify-center rounded-[5px]"
+                                  >
+                                    <Minus
+                                      className="h-[16px] md:h-6 w-[16px] md:w-6"
+                                      color="var(--color-primary)"
+                                    />
+                                  </button>
+                                  <span className="mx-2 min-w-[10px] text-gray-700">
+                                    {item.count}
+                                  </span>
+                                  <button
+                                    onClick={() =>
+                                      updateQuantity(
+                                        item.productId,
+                                        item.count + 1
+                                      )
+                                    }
+                                    className="bg-bg-secondary w-[18px] md:w-7 h-[18px] md:h-7 flex items-center justify-center rounded-[5px]"
+                                  >
+                                    <Plus
+                                      className="h-[16px] md:h-6 w-[16px] md:w-6"
+                                      color="var(--color-primary)"
+                                    />
+                                  </button>
+                                </div>
+                                <p className="min-h-full mt-1/2 text-base md:text-2xl text-text-secondary">
+                                  ${item.price.toFixed(2)}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
           <div className="">
-            <div className="bg-white rounded-lg p-6">
-              <div className="flex items-center justify-between text-lg mt-4 border-b-[3px] border-dashed font-Poppins font-[500] text-7 pb-[20px]">
-                <p className="text-[28px]">
+            <div className="bg-white rounded-lg p-0 md:p-6">
+              <div className="flex items-end md:items-center gap-24 justify-between text-lg mt-4 border-b-[3px] border-dashed font-Poppins font-[500] text-7 pb-[20px]">
+                <p className="text-2xl md:text-[28px]">
                   Jami <br />
-                  <span className="text-2xl text-text-secondary opacity-50">
+                  <span className="text-base md:text-2xl text-text-secondary opacity-50">
                     {cart.length} ta mahsulot
                   </span>
                 </p>
-                <span className="text-[26px]">${total.toFixed(2)}</span>
+                <span className="text-base md:text-[26px]">
+                  ${total.toFixed(2)}
+                </span>
               </div>
               <button
-                className="w-full mt-6 bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition duration-300 text-2xl outline-none"
+                className="w-[340px] md:w-full mt-6 bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition duration-300 text-base md:text-2xl outline-none"
                 onClick={() => setIsModalOpen(true)}
               >
                 Rasmiylashtirish

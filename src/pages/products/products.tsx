@@ -21,13 +21,16 @@ const Products = () => {
   const carBrand = searchParams.get("carBrand");
   const carModel = searchParams.get("carModel");
   const position = searchParams.get("position");
-  const [{ currentPage, isModalOpen, isLoading, loadingCartItems }, setState] =
-    useState({
-      currentPage: 1, // Start with page 1, will be updated by Redux state
-      isModalOpen: null as null | ProductsApi.Types.IProducts.IProduct,
-      isLoading: false,
-      loadingCartItems: new Set<string>(), // Track which items are loading
-    });
+  const [
+    { currentPage, isModalOpen, isLoading, loadingCartItems, isFiltersOpen },
+    setState,
+  ] = useState({
+    currentPage: 1, // Start with page 1, will be updated by Redux state
+    isModalOpen: null as null | ProductsApi.Types.IProducts.IProduct,
+    isLoading: false,
+    loadingCartItems: new Set<string>(), // Track which items are loading
+    isFiltersOpen: false, // Track if filters modal is open
+  });
   // Get the current page from Redux state with proper null safety
   const reduxCurrentPage =
     searchProducts?.pagination?.currentPage ??
@@ -275,17 +278,29 @@ const Products = () => {
     );
   };
 
-  const handleClose = () => {
-    setState((prev) => ({ ...prev, isModalOpen: null }));
+  const handleClose = (type: "filters" | "product") => {
+    if (type === "product")
+      setState((prev) => ({ ...prev, isModalOpen: null }));
+    if (type === "filters")
+      setState((prev) => ({ ...prev, isFiltersOpen: false }));
   };
-
-  console.log("searchProducts:", searchProducts);
 
   return (
     <div className="grid grid-cols-[1fr] md:grid-cols-[330px_1fr] mt-[50px] gap-[35px]">
-      <div className="text-left">
+      <div className="text-left md:block hidden">
         <Filters.Filters />
       </div>{" "}
+      <div className="md:hidden flex items-center justify-between header">
+        <h2 className="text-2xl font-bold text-gray-800">Mahsulotlar</h2>
+
+        <Icon.Icon
+          icon="icon-products-filters"
+          size="sm"
+          color="var(--color-text-muted)"
+          radiusSize={0}
+          onClick={() => setState((prev) => ({ ...prev, isFiltersOpen: true }))}
+        />
+      </div>
       <div className="products grid">
         {isLoading ? (
           <div className="grid place-items-center p-8">
@@ -299,7 +314,7 @@ const Products = () => {
         ) : (
           <>
             {" "}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="w-[300px] md:w-full grid grid-cols-2 md:grid-cols-3 gap-4">
               {(searchProducts.results ?? searchData.results).map((product) => (
                 <Card
                   key={product._id}
@@ -310,7 +325,7 @@ const Products = () => {
                 />
               ))}
             </div>{" "}
-            <div className="pagination flex items-center justify-start gap-4 my-5">
+            <div className="pagination flex items-center justify-start gap-2 md:gap-4 my-5">
               <button
                 onClick={() => {
                   const pagination =
@@ -345,7 +360,7 @@ const Products = () => {
                   }
                 />
               </button>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center flex-wrap gap-2">
                 {Array.from(
                   {
                     length:
@@ -360,7 +375,7 @@ const Products = () => {
                   return (
                     <button
                       key={page}
-                      className={`px-4 py-2 rounded-md ${
+                      className={`px-2 md:px-4 py-1 md:py-2 rounded-md ${
                         page === currentPageFromRedux
                           ? "bg-primary text-bg-primary"
                           : ""
@@ -410,10 +425,22 @@ const Products = () => {
           </>
         )}
       </div>
+      {isFiltersOpen && (
+        <Modal.Modal
+          classes="w-[295px]"
+          onClose={() => handleClose("filters")}
+          type="filters"
+        >
+          <Filters.Filters onClose={() => handleClose("filters")} />
+        </Modal.Modal>
+      )}
       {isModalOpen !== null && (
-        <Modal.Modal classes="w-[1050px] h-[630px]" onClose={handleClose}>
-          <div className="flex items-center justify-center gap-[35px] h-full">
-            <div className="main-image grid place-items-center gap-[10px] w-1/2">
+        <Modal.Modal
+          classes="w-[300px] md:w-[1050px] h-[600] md:h-[630px]"
+          onClose={() => handleClose("product")}
+        >
+          <div className="flex flex-col md:flex-row items-center justify-center gap-[35px] h-full">
+            <div className="main-image grid place-items-center gap-[10px] w-full md:w-1/2">
               <img
                 src={
                   isModalOpen.images.length > 0
@@ -421,11 +448,11 @@ const Products = () => {
                     : "https://placehold.co/450x450"
                 }
                 alt="product"
-                className="rounded-xl"
-                width={"350px"}
-                height={"auto"}
+                className="rounded-xl w-[340px] md:w-[250px] h-[350px] md:h-auto"
+                // width={"350px"}
+                // height={"auto"}
               />
-              <div className="images flex items-center justify-center gap-[17px]">
+              <div className="images hidden md:flex items-center justify-center gap-[17px]">
                 {isModalOpen.images.slice(1, 5).map((image, index) => (
                   <img
                     src={image || "https://placehold.co/100x100"}
@@ -451,7 +478,8 @@ const Products = () => {
                 ))}
               </div>
             </div>
-            <div className="content w-1/2 h-full flex flex-col justify-between">
+
+            <div className="content w-[300px] md:w-1/2 h-full flex flex-col justify-between">
               <div>
                 <p className="name font-Poppins font-medium text-[32px] mb-[5px]">
                   {isModalOpen.name}

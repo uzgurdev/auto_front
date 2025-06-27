@@ -12,9 +12,9 @@ const PopularProductTypes = () => {
     navigate(`/${languages}/products?q=${name}`);
   };
   return (
-    <div className="w-full my-[100px] text-center font-[400] text-[32px]">
+    <div className="w-full my-[100px] text-center font-[400] text-[24px] md:text-[32px]">
       Foydalanuvchilar orasida eng mashhur <br /> avtomobil aksesuarlari
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mt-[50px]">
+      <div className="grid place-items-center grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-8 mt-[50px]">
         {recs.mostOrdered?.map((item) => (
           <TypeCard
             key={item._id}

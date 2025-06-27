@@ -120,12 +120,12 @@ const RecommendationSec = () => {
 
   return (
     <div className="popular flex flex-col gap-10 mt-[100px]">
-      <div className="header flex items-center">
+      <div className="header flex md:flex-row flex-col items-center">
         <h2 className="font-bold text-2xl text-border-dark">
           Ommabop mahsulotlar
         </h2>
 
-        <span className="divider w-[2px] h-[30px] bg-border-dark opacity-50 mx-[30px]"></span>
+        <span className="divider w-[2px] h-[30px] bg-border-dark opacity-50 mx-[30px] md:block hidden"></span>
 
         <div className="btns flex items-center justify-evenly gap-[10px]">
           {categories.current.map((item, idx) => (

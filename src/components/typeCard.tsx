@@ -47,7 +47,7 @@ const TypeCard: FC<Partial<TypeCardProps>> = ({
 
   return (
     <div
-      className="text-base font-[400] min-w-[220px] h-[250px] border rounded-[20px] grid place-items-center px-5 cursor-pointer"
+      className="text-base font-[400] min-w-[150px] md:min-w-[220px] h-[250px] border rounded-[20px] grid place-items-center px-5 cursor-pointer sm:text-xs"
       onClick={handleClick}
     >
       <img

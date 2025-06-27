@@ -3,8 +3,8 @@ import React from "react";
 
 const Comments = () => {
   return (
-    <div className="w-full mb-[100px] relative grid">
-      <div className="wrapper flex items-center justify-between w-full">
+    <div className="w-full mb-[100px] relative grid sm:place-items-center">
+      <div className="wrapper flex md:flex-row flex-col items-center justify-between gap-5 w-full">
         <Comment />
         <Comment />
       </div>
