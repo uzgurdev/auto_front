@@ -11,6 +11,11 @@ import { Store } from "store";
 import { UIActions } from "store/slices";
 import { StorageManager } from "utils";
 
+import ENGINE_BLOCK_iCON from "assets/images/engine_block.png";
+import GEAR_iCON from "assets/images/gear_icon.png";
+
+const placeholderImages = [ENGINE_BLOCK_iCON, GEAR_iCON];
+
 const RecommendationSec = () => {
   const navigate = useNavigate();
   const [
@@ -118,6 +123,8 @@ const RecommendationSec = () => {
     (p) => p._id === isModalOpen?.productId
   );
 
+  console.log("isModalOpen: ", isModalOpen);
+
   return (
     <div className="popular flex flex-col gap-10 mt-[100px]">
       <div className="header flex md:flex-row flex-col items-center">
@@ -155,14 +162,19 @@ const RecommendationSec = () => {
         loadingCartItems={loadingCartItems} // Pass loading state
       />
       {isModalOpen !== null && (
-        <Modal.Modal classes="w-[1050px] h-[630px]" onClose={handleClose}>
-          <div className="flex items-center justify-center gap-[35px] h-full">
-            <div className="main-image grid place-items-center gap-[10px] w-1/2">
+        <Modal.Modal
+          classes="w-[300px] md:w-[1050px] h-[600] md:h-[630px]"
+          onClose={handleClose}
+        >
+          <div className="flex flex-col md:flex-row items-center justify-center gap-[35px] h-full">
+            <div className="main-image grid place-items-center gap-[10px] w-full md:w-1/2">
               <img
                 src={
-                  isModalOpen.images.length > 0
-                    ? isModalOpen.images[0]
-                    : "https://placehold.co/450x450"
+                  isModalOpen.product.images.length > 1
+                    ? isModalOpen.product.images[0]
+                    : placeholderImages[
+                        Math.floor(Math.random() * placeholderImages.length)
+                      ]
                 }
                 alt="product"
                 className="rounded-xl"
@@ -170,7 +182,7 @@ const RecommendationSec = () => {
                 height={"auto"}
               />
               <div className="images flex items-center justify-center gap-[17px]">
-                {isModalOpen.images.slice(1, 5).map((image, index) => (
+                {isModalOpen.product.images.slice(1, 5).map((image, index) => (
                   <img
                     src={image || "https://placehold.co/100x100"}
                     alt="product"
@@ -180,7 +192,7 @@ const RecommendationSec = () => {
                     style={{ filter: "grayscale(500%)" }}
                     key={index}
                     onClick={() => {
-                      const newImages = [...isModalOpen.images];
+                      const newImages = [...(isModalOpen.product.images || [])];
                       const clickedImage = newImages[index + 1];
                       newImages[index + 1] = newImages[0];
                       newImages[0] = clickedImage;
@@ -206,13 +218,13 @@ const RecommendationSec = () => {
                     <p className="text-text-secondary font-Poppins font-medium text-lg">
                       ID:{" "}
                       <span className="text-text-muted">
-                        {isModalOpen.carPartIds?.join(", ")}
+                        {isModalOpen.product.carPartIds?.join(", ")}
                       </span>
                     </p>
                     <p className="text-text-secondary font-Poppins font-medium text-lg">
                       Brand:{" "}
                       <span className="text-text-muted">
-                        {isModalOpen.producer || "N/A"}
+                        {isModalOpen.product.producer || "N/A"}
                       </span>
                     </p>
                     <p className="text-text-secondary font-Poppins font-medium text-lg">
@@ -230,7 +242,7 @@ const RecommendationSec = () => {
 
               <div>
                 <p className="price font-medium text-2xl mt-[20px]">
-                  ${isModalOpen.price}
+                  {isModalOpen.product.price}
                 </p>{" "}
                 <div className="action w-full flex items-center justify-center gap-[16px] mt-[10px]">
                   {singleProductCount.length === 0 && (

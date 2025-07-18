@@ -7,6 +7,9 @@ import { ProductsApi } from "modules";
 import { Icon } from "components";
 import { StorageManager } from "utils";
 
+import ENGINE_BLOCK_iCON from "assets/images/engine_block.png";
+import GEAR_iCON from "assets/images/gear_icon.png";
+
 interface Product extends ProductsApi.Types.IProducts.IProduct {
   onClick: (id: string) => void;
   onCart: (id: string) => void;
@@ -14,6 +17,7 @@ interface Product extends ProductsApi.Types.IProducts.IProduct {
 }
 
 const IMG_URL = process.env.REACT_APP_IMAGE_URL;
+const placeholderImages = [ENGINE_BLOCK_iCON, GEAR_iCON];
 
 const Card: FC<Partial<Product>> = (Product) => {
   const { languages } = useSelector((state: RootState) => state.ui);
@@ -71,9 +75,11 @@ const Card: FC<Partial<Product>> = (Product) => {
           src={
             (Product?.images ?? []).length > 0
               ? `${
-                  Product?.images?.[0].includes("https")
+                  Product?.images?.length > 1
                     ? Product?.images?.[0]
-                    : imageUrl
+                    : placeholderImages[
+                        Math.floor(Math.random() * placeholderImages.length)
+                      ]
                 }`
               : ""
           }

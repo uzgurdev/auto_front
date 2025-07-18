@@ -12,7 +12,12 @@ import { UIActions } from "store/slices";
 import { CartApi } from "modules";
 import { StorageManager } from "utils";
 
+import ENGINE_BLOCK_iCON from "assets/images/engine_block.png";
+import GEAR_iCON from "assets/images/gear_icon.png";
+
 import "../assets/styles/animations.css";
+
+const placeholderImages = [ENGINE_BLOCK_iCON, GEAR_iCON];
 
 export default function CartPage() {
   const { languages, cart } = useSelector((state: RootState) => state.ui);
@@ -197,7 +202,7 @@ export default function CartPage() {
         </div>
       ) : (
         // <div className="grid grid-cols-[800px_400px] gap-8">
-        <div className="grid gap-8 w-[300px] md:w-full">
+        <div className="grid gap-8 max-w-[300px] w-full lg:max-w-none">
           <div className="">
             <div className="bg-white rounded-lg overflow-hidden">
               <table className="hidden md:block w-full">
@@ -208,7 +213,15 @@ export default function CartPage() {
                         <div className="flex items-start">
                           <div className="flex-shrink-0 h-[150px] w-[150px]">
                             <img
-                              src={item.image}
+                              src={
+                                !item.image.includes("picsum")
+                                  ? item.image
+                                  : placeholderImages[
+                                      Math.floor(
+                                        Math.random() * placeholderImages.length
+                                      )
+                                    ]
+                              }
                               alt={item.name}
                               width={150}
                               height={150}

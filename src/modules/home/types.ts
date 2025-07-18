@@ -38,11 +38,20 @@ export namespace IHome {
       productId: string;
       name: string;
       count: number;
-      producer: string;
-      images: string[];
-      price: string;
+      product: {
+        _id: string;
+        name: string;
+        position: string;
+        carModel: string[];
+        producer: string;
+        carPartIds: string[];
+        price: string;
+        currency: string;
+        tenantId: string;
+        images: string[];
+        carBrand: string;
+      };
       category: string;
-      carPartIds: string[];
     }
 
     export interface mostOrderedByCategory {

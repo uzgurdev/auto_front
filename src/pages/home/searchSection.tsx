@@ -36,9 +36,7 @@ const SearchSection = () => {
     const fetchProducers = async () => {
       if (isEmpty(data.producer)) {
         try {
-          console.log("Fetching producers...");
           const response = await HomeApi.Api.FilterProducers();
-          console.log("Producers response:", response.data);
           setState((prev) => ({
             ...prev,
             data: {

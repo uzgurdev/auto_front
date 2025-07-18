@@ -25,9 +25,9 @@ const TypeCard: FC<Partial<TypeCardProps>> = ({
     const getImage = async () => {
       if (imageUrl) return;
 
-      if (!image.includes("https")) {
+      if (!image?.includes("https")) {
         const imageData = await fetch(
-          `${IMG_URL}${image.replace(".jpg", "")}`,
+          `${IMG_URL}${image?.replace(".jpg", "")}`,
           {
             method: "GET",
           }
@@ -52,7 +52,7 @@ const TypeCard: FC<Partial<TypeCardProps>> = ({
     >
       <img
         loading="lazy"
-        src={image.includes("https") ? image : imageUrl}
+        src={image?.includes("https") ? image : imageUrl}
         alt={name}
         className="h-[150px] w-auto"
       />

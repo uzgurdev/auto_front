@@ -1,0 +1,1 @@
+ - [ ] Remove 'Xarid Qilish' button if there's no discount

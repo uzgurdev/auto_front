@@ -25,7 +25,6 @@ http.interceptors.request.use((request) => {
 
 http.interceptors.response.use(
   (response) => {
-    console.log("Current cookies:", document.cookie);
     return response;
   },
   async (error) => {

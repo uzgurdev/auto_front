@@ -10,6 +10,11 @@ import { ProductsApi } from "modules";
 import { Card, Filters, Icon, Modal } from "components";
 import { StorageManager } from "utils";
 
+import ENGINE_BLOCK_iCON from "assets/images/engine_block.png";
+import GEAR_iCON from "assets/images/gear_icon.png";
+
+const placeholderImages = [ENGINE_BLOCK_iCON, GEAR_iCON];
+
 const Products = () => {
   const { cart, searchProducts, searchData } = useSelector(
     (state: RootState) => state.ui
@@ -443,9 +448,11 @@ const Products = () => {
             <div className="main-image grid place-items-center gap-[10px] w-full md:w-1/2">
               <img
                 src={
-                  isModalOpen.images.length > 0
+                  isModalOpen.images.length > 1
                     ? isModalOpen.images[0]
-                    : "https://placehold.co/450x450"
+                    : placeholderImages[
+                        Math.floor(Math.random() * placeholderImages.length)
+                      ]
                 }
                 alt="product"
                 className="rounded-xl w-[340px] md:w-[250px] h-[350px] md:h-auto"
@@ -455,7 +462,12 @@ const Products = () => {
               <div className="images hidden md:flex items-center justify-center gap-[17px]">
                 {isModalOpen.images.slice(1, 5).map((image, index) => (
                   <img
-                    src={image || "https://placehold.co/100x100"}
+                    src={
+                      image ||
+                      placeholderImages[
+                        Math.floor(Math.random() * placeholderImages.length)
+                      ]
+                    }
                     alt="product"
                     height={"80px"}
                     width={"80px"}
@@ -481,7 +493,7 @@ const Products = () => {
 
             <div className="content w-[300px] md:w-1/2 h-full flex flex-col justify-between">
               <div>
-                <p className="name font-Poppins font-medium text-[32px] mb-[5px]">
+                <p className="name font-Poppins font-medium text-2xl md:text-[32px] mb-[5px]">
                   {isModalOpen.name}
                 </p>
                 <hr />
@@ -500,7 +512,10 @@ const Products = () => {
                       </span>
                     </p>
                     <p className="text-text-secondary font-Poppins font-medium text-lg">
-                      Model: <span className="text-text-muted">Model</span>
+                      Model:{" "}
+                      <span className="text-text-muted">
+                        {isModalOpen.carModel.join(", ")}
+                      </span>
                     </p>
                     {isModalOpen.position && (
                       <p className="text-text-secondary font-Poppins font-medium text-lg">
@@ -555,7 +570,7 @@ const Products = () => {
                     )}{" "}
                   {singleProductCount.length === 0 && (
                     <button
-                      className={`w-full h-[90px] bg-primary rounded-[10px] flex items-center justify-center gap-[10px] text-bg-primary ${
+                      className={`w-full h-60px md:h-[90px] bg-primary rounded-[10px] flex items-center justify-center gap-[10px] text-bg-primary ${
                         loadingCartItems.has(isModalOpen?._id || "")
                           ? "opacity-50 cursor-not-allowed"
                           : ""

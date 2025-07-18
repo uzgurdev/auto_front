@@ -79,6 +79,8 @@ const Carousel: React.FC<CarouselProps> = ({
     }
   };
 
+  console.log("Carousel products:", products);
+
   return (
     <div className="relative max-w-full h-max">
       <div
@@ -87,16 +89,14 @@ const Carousel: React.FC<CarouselProps> = ({
         onScroll={checkScroll}
       >
         {" "}
-        {products.map((product) => (
-          <div key={product.productId} className="flex-shrink-0">
+        {products.map(({ product }) => (
+          <div key={product._id} className="flex-shrink-0">
             <Card
               {...product}
-              _id={product.productId} // Map productId to _id for Card component compatibility
-              isCartLoading={loadingCartItems?.has(product.productId)} // Pass loading state
-              onCart={onCart ? () => onCart(product.productId) : () => {}}
-              onClick={
-                onOpenModal ? () => onOpenModal(product.productId) : () => {}
-              }
+              _id={product._id} // Map _id to _id for Card component compatibility
+              isCartLoading={loadingCartItems?.has(product._id)} // Pass loading state
+              onCart={onCart ? () => onCart(product._id) : () => {}}
+              onClick={onOpenModal ? () => onOpenModal(product._id) : () => {}}
             />
           </div>
         ))}
