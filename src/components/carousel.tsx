@@ -88,7 +88,7 @@ const Carousel: React.FC<CarouselProps> = ({
       >
         {" "}
         {products.map(({ product }) => (
-          <div key={product._id} className="flex-shrink-0">
+          <div key={product._id} className="flex-shrink-2">
             <Card
               {...product}
               _id={product._id} // Map _id to _id for Card component compatibility

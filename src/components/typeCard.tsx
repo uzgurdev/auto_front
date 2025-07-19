@@ -1,5 +1,7 @@
 import { FC, memo, useEffect, useState } from "react";
 
+import ENGINE_BLOCK_iCON from "assets/images/engine_block.png";
+import GEAR_iCON from "assets/images/gear_icon.png";
 interface TypeCardProps {
   id: string;
   image: string;
@@ -9,6 +11,7 @@ interface TypeCardProps {
 }
 
 const IMG_URL = process.env.REACT_APP_IMAGE_URL;
+const placeholderImages = [ENGINE_BLOCK_iCON, GEAR_iCON];
 
 const TypeCard: FC<Partial<TypeCardProps>> = ({
   id,
@@ -52,7 +55,13 @@ const TypeCard: FC<Partial<TypeCardProps>> = ({
     >
       <img
         loading="lazy"
-        src={image?.includes("https") ? image : imageUrl}
+        src={`${
+          !image.includes("picsum")
+            ? image
+            : placeholderImages[
+                Math.floor(Math.random() * placeholderImages.length)
+              ]
+        }`}
         alt={name}
         className="h-[150px] w-auto"
       />

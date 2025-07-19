@@ -196,7 +196,7 @@ export default function CartPage() {
         <div className="grid gap-8 max-w-[300px] w-full lg:max-w-none">
           <div className="">
             <div className="bg-white rounded-lg overflow-hidden">
-              <table className="hidden md:block w-full">
+              <table className="hidden md:table w-full">
                 <tbody className="divide-y divide-gray-200">
                   {cart.map((item) => (
                     <tr key={item._id}>

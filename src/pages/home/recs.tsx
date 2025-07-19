@@ -175,11 +175,11 @@ const RecommendationSec = () => {
                       ]
                 }
                 alt="product"
-                className="rounded-xl"
-                width={"350px"}
-                height={"auto"}
+                className="rounded-xl w-[300px] md:w-[250px] h-[250px] md:h-auto"
+                // width={"350px"}
+                // height={"auto"}
               />
-              <div className="images flex items-center justify-center gap-[17px]">
+              <div className="images hidden md:flex items-center justify-center gap-[17px]">
                 {isModalOpen.product.images.slice(1, 5).map((image, index) => (
                   <img
                     src={image || "https://placehold.co/100x100"}
@@ -205,7 +205,7 @@ const RecommendationSec = () => {
                 ))}
               </div>
             </div>
-            <div className="content w-1/2 h-full flex flex-col justify-between">
+            <div className="content w-[300px] md:w-1/2 h-full flex flex-col justify-between">
               <div>
                 <p className="name font-Poppins font-medium text-[32px] mb-[5px]">
                   {isModalOpen.name}
@@ -245,8 +245,8 @@ const RecommendationSec = () => {
                 <div className="action w-full flex items-center justify-center gap-[16px] mt-[10px]">
                   {singleProductCount.length === 0 && (
                     <button
-                      className={`w-full h-[90px] bg-primary rounded-[10px] flex items-center justify-center gap-[10px] text-bg-primary ${
-                        loadingCartItems.has(isModalOpen.productId)
+                      className={`w-full h-60px md:h-[90px] bg-primary rounded-[10px] flex items-center justify-center gap-[10px] text-bg-primary ${
+                        loadingCartItems.has(isModalOpen?.product._id || "")
                           ? "opacity-50 cursor-not-allowed"
                           : ""
                       }`}
