@@ -29,10 +29,9 @@ http.interceptors.response.use(
   },
   async (error) => {
     if (error instanceof AxiosError) {
-      console.log(error.response?.data.detail);
       //   toast.error(error.response?.data.detail);
       if (error.response?.status === 500) {
-        console.log("Server error - 500");
+        console.error("Server error - 500");
         // toast.error("Server error - 500");
         //   try {
         //     const newToken = await Auth.Token()

@@ -41,12 +41,6 @@ const Position = () => {
     try {
       // Convert position to Russian format with LH/RH notation
       const russianPosition = convertPositionToRussian(position);
-      console.log(
-        "Selected position:",
-        position,
-        "-> Russian format:",
-        russianPosition
-      );
 
       // Build query string with existing filters, replacing any existing position
       const currentFilters = searchData.filters || "";
@@ -60,7 +54,6 @@ const Position = () => {
 
       const fullQuery = params.toString();
 
-      console.log("Performing position search with query:", fullQuery);
       const { data } = await HomeApi.Api.FilterSearch(fullQuery);
 
       Store.dispatch(
@@ -98,7 +91,6 @@ const Position = () => {
         params.delete("position");
         const newQuery = params.toString();
 
-        console.log("Clearing position filter, new query:", newQuery);
         if (newQuery) {
           // If there are other filters, search with them
           const { data } = await HomeApi.Api.FilterSearch(newQuery);

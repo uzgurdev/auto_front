@@ -68,12 +68,6 @@ export default function CartPage() {
         const { data } = await CartApi.CartApi.cart();
         const cartData = data as any;
 
-        console.log({
-          cartData,
-          items: cartData.data.items,
-          isItemsArray: Array.isArray(cartData.data.items),
-        });
-
         if (
           !cartData ||
           !cartData.data.items ||
@@ -109,18 +103,15 @@ export default function CartPage() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ e, target: e.currentTarget });
     if (isSubmitted) return;
     try {
       setState((prev) => ({ ...prev, isSubmitting: true }));
       const formData = new FormData(e.currentTarget);
       const data = Object.fromEntries(formData.entries());
-      console.log({ formData, dataObj: data });
+
       const response = await CartApi.CartApi.submitOrder(data);
       Store.dispatch(UIActions.setCart([]));
       StorageManager.del("cart");
-
-      console.log({ data: response.data });
     } catch (error) {
       console.error("Error submitting order:", error);
     } finally {

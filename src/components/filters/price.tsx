@@ -48,13 +48,9 @@ const Price = () => {
       if (producer || brand || model) {
         // Reset to a consistent range when any filters are applied
         Store.dispatch(UIActions.setPriceRange({ min: 10, max: 500 }));
-        console.log(
-          `Price range reset for filters: ${producer}/${brand}/${model} -> $10-$500`
-        );
       } else {
         // No filters - reset to default wide range
         Store.dispatch(UIActions.resetPriceRange());
-        console.log("Price range reset to default: $1-$1000");
       }
 
       setTimeout(() => setIsUpdating(false), 300);
@@ -84,8 +80,6 @@ const Price = () => {
       try {
         const priceQuery = `minPrice=${newPriceRange[0]}&maxPrice=${newPriceRange[1]}`;
         const fullQuery = filters ? `${priceQuery}&${filters}` : priceQuery;
-
-        console.log("Performing price search with query:", fullQuery);
 
         const { data } = await HomeApi.Api.FilterSearch(fullQuery);
 

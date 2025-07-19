@@ -122,10 +122,6 @@ const UISlice = createSlice({
       state,
       action: PayloadAction<UI.Appearance["searchProducts"]>
     ) => {
-      console.log(
-        "setSearchProducts reducer - results length:",
-        action.payload.results?.length
-      );
       state.searchProducts = action.payload;
     },
     setPriceRange: (

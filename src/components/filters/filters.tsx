@@ -38,9 +38,7 @@ const Filters: FC<FiltersProps> = ({ onClose }) => {
     const fetchProducers = async () => {
       if (isEmpty(data.producer)) {
         try {
-          console.log("Fetching producers...");
           const response = await HomeApi.Api.FilterProducers();
-          console.log("Producers response:", response.data);
           setState((prev) => ({
             ...prev,
             data: {
@@ -61,9 +59,7 @@ const Filters: FC<FiltersProps> = ({ onClose }) => {
     const fetchBrands = async () => {
       if (values.producer && isEmpty(data.brands)) {
         try {
-          console.log("Fetching brands for producer:", values.producer);
           const response = await HomeApi.Api.FilterBrands(values.producer);
-          console.log("Brands response:", response.data);
           setState((prev) => ({
             ...prev,
             data: {

@@ -53,7 +53,6 @@ const Products = () => {
           searchProducts.results.length > 0 &&
           currentPage === reduxCurrentPage
         ) {
-          console.log("Using existing searchProducts data for position filter");
           setState((prev) => ({ ...prev, isLoading: false }));
           return;
         }
@@ -90,7 +89,6 @@ const Products = () => {
           queryString = searchFilters.toString();
         }
 
-        console.log("Search query string:", queryString);
         const { data } = await ProductsApi.Api.search(queryString);
 
         Store.dispatch(
@@ -102,7 +100,7 @@ const Products = () => {
             },
           })
         );
-        console.log("count:", data.cartCount);
+
         Store.dispatch(UIActions.setCartCount(data.cartCount ?? 0));
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -147,7 +145,7 @@ const Products = () => {
 
     // Check if we're already on this page
     if (pagination.currentPage === page) {
-      console.log("Already on page:", page);
+      // console.log("Already on page:", page);
       return;
     }
 
@@ -191,7 +189,6 @@ const Products = () => {
         queryString = searchFilters.toString();
       }
 
-      console.log("Pagination query string:", queryString);
       const { data } = await ProductsApi.Api.search(queryString);
 
       // Update Redux store with new data and pagination info
@@ -205,7 +202,6 @@ const Products = () => {
         })
       );
 
-      console.log("Pagination updated to page:", page);
     } catch (error) {
       console.error("Error during pagination:", error);
       // Reset to previous page on error

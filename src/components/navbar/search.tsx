@@ -38,8 +38,6 @@ const Search = ({ languages }: { languages: string }) => {
       const { data } = await ProductsApi.Api.search(
         `query=${encodeURIComponent(match)}`
       );
-      console.log("Navbar search results:", data);
-      console.log("Search match term:", match);
       setState((prev) => ({ ...prev, data }));
       const newProducts = data.results.map((product) => {
         const word = product.name.toLowerCase();
@@ -63,8 +61,6 @@ const Search = ({ languages }: { languages: string }) => {
         // Return product as-is if no name match but it's in search results
         return product;
       });
-
-      console.log("Processed newProducts:", newProducts);
       setResults(newProducts);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -117,10 +113,9 @@ const Search = ({ languages }: { languages: string }) => {
     if (e.key === "Enter") {
       if (results.length <= 0) {
         // Even if no dropdown results, still allow search
-        console.log("No dropdown results, but performing search for:", value);
+        // console.log("No dropdown results, but performing search for:", value);
       }
       setIsSearchActive(false);
-      console.log("Navbar search data:", data);
 
       // Dispatch search data to Redux store with proper structure
       if (data && data.results) {

@@ -57,9 +57,7 @@ const SearchSection = () => {
     const fetchBrands = async () => {
       if (values.producer) {
         try {
-          console.log("Fetching brands for producer:", values.producer);
           const response = await HomeApi.Api.FilterBrands(values.producer);
-          console.log("Brands response:", response.data);
           setState((prev) => ({
             ...prev,
             data: {
@@ -82,12 +80,10 @@ const SearchSection = () => {
     const fetchModels = async () => {
       if (values.transport_brand) {
         try {
-          console.log("Fetching models for brand:", values.transport_brand);
           const response = await HomeApi.Api.FilterModels(
             values.producer,
             values.transport_brand
           );
-          console.log("Models response:", response.data);
           setState((prev) => ({
             ...prev,
             data: {
@@ -107,7 +103,6 @@ const SearchSection = () => {
   }, [values.transport_brand, values.producer]);
 
   const handleChange = (name: string, value: string) => {
-    console.log("Handling change for:", name, "with value:", value);
     setState((prev) => ({
       ...prev,
       values: {
@@ -115,8 +110,6 @@ const SearchSection = () => {
         [value]: name,
       },
     }));
-
-    console.log({ name, value });
 
     if (name === "producer") {
       setState((prev) => ({

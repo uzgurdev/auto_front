@@ -123,8 +123,6 @@ const RecommendationSec = () => {
     (p) => p._id === isModalOpen?.productId
   );
 
-  console.log("isModalOpen: ", isModalOpen);
-
   return (
     <div className="popular flex flex-col gap-10 mt-[100px]">
       <div className="header flex md:flex-row flex-col items-center">

@@ -79,8 +79,6 @@ const Carousel: React.FC<CarouselProps> = ({
     }
   };
 
-  console.log("Carousel products:", products);
-
   return (
     <div className="relative max-w-full h-max">
       <div
