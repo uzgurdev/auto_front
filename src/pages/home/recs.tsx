@@ -232,6 +232,12 @@ const RecommendationSec = () => {
                       </span>
                     </p>{" "}
                   </div>
+                  <p className="text-text-secondary font-Poppins font-medium text-lg">
+                    Model:{" "}
+                    <span className="text-text-muted">
+                      {isModalOpen.product.carModel.join(", ")}
+                    </span>
+                  </p>
                   {/* <p className="text-text-muted font-Poppins font-medium text-lg">
                     Mavjud: <span className="text-success">10 tadan ko'p</span>
                   </p> */}
